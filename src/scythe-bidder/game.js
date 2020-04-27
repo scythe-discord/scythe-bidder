@@ -1,5 +1,26 @@
 import { bid } from "./moves";
 
+
+const mats = [
+  'Industrial',
+  'Engineering',
+  'Militant'
+  'Patriotic',
+  'Innovative',
+  'Mechanical',
+  'Agricultural',
+];
+
+const factions = [
+  'Togawa',
+  'Crimea',
+  'Saxony',
+  'Polania',
+  'Albion',
+  'Nordic',
+  'Rusviet'
+];
+
 const endIf = (G, ctx) => {
   let endGame = true;
   for (const combination of G.combinations) {
@@ -9,31 +30,28 @@ const endIf = (G, ctx) => {
   if (endGame === true) return endGame;
 };
 
+const checkBannedCombos = (faction, mat) => (
+  (
+    (faction == 'Rusviet' && mat == 'Industrial') ||
+    (faction == 'Crimea' && mat == 'Patriotic')
+  )
+)
+
 const setup = ctx => {
-  const mats = [
-    'Industrial',
-    'Engineering',
-    'Mechanical',
-    'Agricultural',
-    'Patriotic',
-    'Innovative',
-    'Militant'
-  ];
-  const factions = [
-    'Togawa',
-    'Crimea',
-    'Saxony',
-    'Polania',
-    'Albion',
-    'Nordic',
-    'Rusviet'
-  ];
   let gameCombinations = [];
   let randomizedMats = ctx.random.Shuffle(mats);
   let randomizedFactions = ctx.random.Shuffle(factions);
   for (let j = 0; j < ctx.numPlayers ; j++) {
-    const mat = randomizedMats.pop();
-    const faction = randomizedFactions.pop();
+    const mat = randomizedMats[j];
+    const faction = randomizedFactions[j];
+    if (j < 6) {
+      if (checkBannedCombos(faction, mat)) {
+        const temp = randomizedMats[j];
+        randomizedMats[j] = randomizedMats[j+1];
+        randomizedMats[j+1] = temp;
+        j = j - 1;
+      }
+    }
     const combination = {mat, faction, currentBid:-1, currentHolder: ''};
     gameCombinations.push(combination);
   }
