@@ -10,6 +10,7 @@ import { Client } from 'boardgame.io/react';
 import ScytheBidderGame from './game';
 import BiddingBoard from './board';
 
+
 const ScytheClient = Client({
   game: ScytheBidderGame,
   board: BiddingBoard,

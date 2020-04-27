@@ -6,25 +6,34 @@ const messageStyle = {
   color: 'blue'
 }
 
-const rulesText = 'Pick the combination you want to play as'
+let playerInfo = [
+  {name: 'Player 1', id: 0},
+  {name: 'Player 2', id: 1},
+  {name: 'Player 3', id: 2},
+  {name: 'Player 4', id: 3}
+];
+
+const rulesText = 'Scythe Auction v0.0.1';
 
 const BiddingBoard = props => {
   const { G, playerID, isActive, moves, events, gameMetadata, ctx } = props;
+  if (typeof gameMetadata !== 'undefined') { playerInfo = [...gameMetadata]; }
   return (
     <div>
       <div>
           <div id='rules'>
-            <p id='rulesText'>{rulesText}</p>
+            <p id='rulesText' style={{ 'text-decoration': 'underline' }}>{rulesText}</p>
           </div>
           <span id='turnmessage' style={messageStyle}>
-            {isActive && `It's your turn, ${gameMetadata[playerID].name}`}
+            {isActive && `It's your turn, ${playerInfo[playerID].name}`}
           </span>
           <br />
           <br />
       </div>
-      {G.combinations.map((c, key) => (
-        <Combination combination={c} moves={moves} events={events} key={key} players={gameMetadata} ctx={ctx}/>
-      ))}
+      {G.combinations.map((c, key) => {
+        return <Combination combination={c} moves={moves} events={events} key={key} players={playerInfo} ctx={ctx}/>
+      })}
+    <footer>============================================</footer>
     </div>
   );
 };
