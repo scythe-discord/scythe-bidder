@@ -17,8 +17,8 @@ const LobbyView = () => (
     <h1>Game Lobby</h1>
 
     <Lobby
-      gameServer={"https://gaming-lobby-server.herokuapp.com/"}
-      lobbyServer={"https://gaming-lobby-server.herokuapp.com/"}
+      gameServer={"https://gaming-lobby-server.herokuapp.com"}
+      lobbyServer={"https://gaming-lobby-server.herokuapp.com"}
       gameComponents={importedGames}
     />
   </div>
