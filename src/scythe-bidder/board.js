@@ -1,5 +1,6 @@
 import React from "react";
 import Combination from './combination'
+import TurnOrder from '.turnorder'
 
 
 const messageStyle = {
@@ -27,6 +28,7 @@ const BiddingBoard = props => {
           <span id='turnmessage' style={messageStyle}>
             {isActive && `It's your turn, ${playerInfo[playerID].name}`}
           </span>
+          <TurnOrder players={playerInfo} ctx={ctx}/>
           <br />
           <br />
       </div>
