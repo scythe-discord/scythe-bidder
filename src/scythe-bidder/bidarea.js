@@ -1,25 +1,33 @@
 import React from "react";
 import Combination from './combination';
+import { Container, Row, Col } from 'react-bootstrap';
 
-//does not need to be a class
-class BidArea extends React.Component {
-  render() {
-    return (
-      <div>
-        {this.props.G.combinations.map((c, key) => (
-          <Combination
-            combination={c}
-            moves={this.props.moves}
-            events={this.props.events}
-            key={key}
-            players={this.props.playerInfo}
-            ctx={this.props.ctx}
-            isActive={this.props.isActive}
-          />
-        ))}
-      </div>
-    )
-  }
+const BidArea = props => {
+  return(
+    <Container className="text-center">
+      <Row style={{backgroundColor: '#f0f0f0'}}>
+        <Col lg={2}></Col>
+        <Col>Combination</Col>
+        <Col>Current Bid</Col>
+      </Row>
+      {props.G.combinations.map((c, key) => (
+        <Combination
+          combination={c}
+          moves={props.moves}
+          events={props.events}
+          key={key}
+          players={props.playerInfo}
+          ctx={props.ctx}
+          isActive={props.isActive}
+        />
+      ))}
+      <Row style={{backgroundColor: '#f0f0f0'}}>
+        <Col lg={2}></Col>
+        <Col>Combination</Col>
+        <Col>Current Bid</Col>
+      </Row>
+    </Container>
+  )
 }
 
 export default BidArea;

@@ -35,15 +35,16 @@ const BiddingBoard = props => {
       <div id='rules'>
         <p id='rulesText' style={{ 'textDecoration': 'underline' }}>{rulesText}</p>
       </div>
-      <Container className="justify-content-left">
-        <TurnOrder players={playerInfo} ctx={ctx} playerID={playerID} isActive={isActive}/>
-      </Container>
+      {!ctx.gameover &&
+        <Container className="justify-content-left">
+          <TurnOrder players={playerInfo} ctx={ctx} playerID={playerID} isActive={isActive}/>
+        </Container>
+      }
       {showGameEndMessage(ctx.gameover) ||
         <BidArea isActive={isActive} ctx={ctx} G={G} moves={moves} events={events} playerInfo={playerInfo}/>
       }
-      <footer>============================================</footer>
     </div>
-  );
+  )
 };
 
 export default BiddingBoard

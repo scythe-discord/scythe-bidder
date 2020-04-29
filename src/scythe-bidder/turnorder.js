@@ -13,19 +13,26 @@ class TurnOrder extends React.Component {
     this.isActive = this.props.isActive;
   }
 
-  showCurrentPlayerMark(playerId) {
+  highlightCurrentPlayer(playerId) {
     if (this.isCurrentPlayer(playerId))
-      return "***";
+      return 'font-weight-bold';
+    return 'font-weight-normal';
   }
 
   isCurrentPlayer(playerId) {
-    return this.props.ctx.currentPlayer === playerId
+    return this.props.ctx.currentPlayer === playerId;
   }
 
-  showOrder(playerId, key) {
+  showOrder(playerId, key, playerNum) {
+    const isLastPlayer = (key + 1 === playerNum);
     return (
-      <span key={key}>
-        {this.showCurrentPlayerMark(playerId)}{this.players[playerId].name}{this.showCurrentPlayerMark(playerId)}{", "}
+      <span>
+        <span key={key} className={this.highlightCurrentPlayer(playerId)}>
+          {this.players[playerId].name}
+        </span>
+        <span key={key}>
+          {!isLastPlayer && ", "}
+        </span>
       </span>
     )
   }
@@ -35,10 +42,12 @@ class TurnOrder extends React.Component {
   }
 
   render() {
+    const playerNum = this.props.ctx.playOrder.length;
     return (
-      <div>
+      <div className={"text-center container"}>
+        <span>{"Bid order: "}</span>
         {this.props.ctx.playOrder.map((playerId, key) => {
-          return this.showOrder(playerId, key);
+          return this.showOrder(playerId, key, playerNum);
         })}
       </div>
     )
