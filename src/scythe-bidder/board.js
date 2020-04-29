@@ -4,6 +4,10 @@ import BidArea from './bidarea';
 import { Container } from 'react-bootstrap';
 
 
+const messageStyle = {
+  color: 'blue'
+}
+ 
 let playerInfo = [
   {name: 'Player 1', id: 0},
   {name: 'Player 2', id: 1},
@@ -34,6 +38,7 @@ const BiddingBoard = props => {
       <div id='rules'>
         <p id='rulesText' style={{ 'textDecoration': 'underline' }}>{rulesText}</p>
       </div>
+      {isActive && <p style={messageStyle}>It's your turn</p>}
       {!ctx.gameover &&
         <Container className="justify-content-left">
           <TurnOrder players={playerInfo} ctx={ctx} playerID={playerID} isActive={isActive}/>
