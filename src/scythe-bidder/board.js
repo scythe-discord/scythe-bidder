@@ -28,7 +28,6 @@ function showGameEndMessage(gameOver) {
 
 const BiddingBoard = props => {
   const { G, playerID, isActive, moves, events, gameMetadata, ctx } = props;
-  console.log(props);
   if (typeof gameMetadata !== 'undefined') { playerInfo = [...gameMetadata]; }
   return (
     <div>
