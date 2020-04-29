@@ -23,7 +23,8 @@ function showGameEndMessage(gameOver) {
     return false;
   }
   return (
-    <Container className="justify-content-center">
+    <Container className="font-weight-bold justify-content-center">
+      <h3>Auction Ended!</h3>
       {gameOver.map((c, key) => (
         <p key={key}>{c.faction}{" "}{c.mat}{" - $"}{c.currentBid}{" to "}{c.currentHolder.name}</p>
       ))}
