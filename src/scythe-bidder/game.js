@@ -27,7 +27,7 @@ const endIf = (G, ctx) => {
     if (combination.currentHolder === '')
       endGame = false;
   }
-  if (endGame === true) return endGame;
+  if (endGame === true) return G.combinations;
 };
 
 const checkBannedCombos = (faction, mat) => (
@@ -87,8 +87,9 @@ const turn = {
         nextPlayer = getNextPlayer(nextPlayer, ctx.numPlayers)
       }
       return nextPlayer;
-    }
-  }
+    },
+    playOrder: (G, ctx)  => ctx.random.Shuffle(ctx.playOrder),
+  },
 };
 
 const ScytheBidderGame = {

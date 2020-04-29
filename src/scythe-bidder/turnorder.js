@@ -1,20 +1,48 @@
 import React from "react";
-import _ from "lodash";
+
+const messageStyle = {
+  color: 'blue'
+}
 
 class TurnOrder extends React.Component {
   constructor(props) {
     super(props);
+    this.currentPlayer = this.props.ctx.currentPlayer;
+    this.players = this.props.players;
+    this.playerID = this.props.playerID;
+    this.isActive = this.props.isActive;
+  }
+
+  showCurrentPlayerMark(playerId) {
+    if (this.isCurrentPlayer(playerId))
+      return "***";
+  }
+
+  isCurrentPlayer(playerId) {
+    return this.props.ctx.currentPlayer === playerId
+  }
+
+  showOrder(playerId, key) {
+    return (
+      <span key={key}>
+        {this.showCurrentPlayerMark(playerId)}{this.players[playerId].name}{this.showCurrentPlayerMark(playerId)}{", "}
+      </span>
+    )
+  }
+
+  showItsYourTurnMessage() {
+    return <p id='turnmessage' style={messageStyle}>{this.isActive && "It's your turn!"}</p>
   }
 
   render() {
     return (
       <div>
-        {this.props.players.map((p, key) => {
-          return <p>{p.name}</p>
+        {this.props.ctx.playOrder.map((playerId, key) => {
+          return this.showOrder(playerId, key);
         })}
       </div>
     )
   }
 }
 
-export default Combination;
+export default TurnOrder;

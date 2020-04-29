@@ -7,7 +7,6 @@ import './lobby.css';
 ScytheBidderGame.minPlayers = 2;
 ScytheBidderGame.maxPlayers = 7;
 
-const hostname = window.location.hostname;
 const importedGames = [
   { game: ScytheBidderGame, board: BiddingBoard },
 ];
