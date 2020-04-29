@@ -1,6 +1,7 @@
 import React from "react";
 import TurnOrder from './turnorder';
 import BidArea from './bidarea';
+import GameLog from './gamelog'
 import { Container } from 'react-bootstrap';
 
 
@@ -47,6 +48,7 @@ const BiddingBoard = props => {
       {showGameEndMessage(ctx.gameover) ||
         <BidArea isActive={isActive} ctx={ctx} G={G} moves={moves} events={events} playerInfo={playerInfo}/>
       }
+      <GameLog G={G} />
     </div>
   )
 };

@@ -61,7 +61,8 @@ const setup = ctx => {
   return {
     combinations: gameCombinations,
     players: {},
-    endGame: false
+    endGame: false,
+    gameLogger: ["Auction start!"],
   };
 };
 
