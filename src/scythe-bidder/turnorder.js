@@ -26,11 +26,11 @@ class TurnOrder extends React.Component {
   showOrder(playerId, key, playerNum) {
     const isLastPlayer = (key + 1 === playerNum);
     return (
-      <span>
-        <span key={key} className={this.highlightCurrentPlayer(playerId)}>
+      <span key={key}>
+        <span className={this.highlightCurrentPlayer(playerId)}>
           {this.players[playerId].name}
         </span>
-        <span key={key}>
+        <span>
           {!isLastPlayer && ", "}
         </span>
       </span>
