@@ -67,12 +67,13 @@ const setup = ctx => {
 };
 
 const getNextPlayer = (playerId, numPlayers) => (
-    (playerId + 1) % numPlayers
+  (playerId + 1) % numPlayers
 )
 
-const hasMat = (playerId, combinations) => {
+const hasMat = (playerId, combinations, playOrder) => {
+  const player = playOrder[playerId];
   for (const c of combinations) {
-    if (parseInt(c.currentHolder.id) === parseInt(playerId)) {
+    if (parseInt(c.currentHolder.id) === parseInt(player)) {
       return true;
     }
   }
@@ -83,11 +84,11 @@ const turn = {
   order: {
     first: (G, ctx) => 0,
     next: (G, ctx) => {
-      let nextPlayer = getNextPlayer(ctx.playOrderPos, ctx.numPlayers);
-      while (hasMat(nextPlayer, G.combinations)) {
-        nextPlayer = getNextPlayer(nextPlayer, ctx.numPlayers)
+      let nextPlayerPos = getNextPlayer(ctx.playOrderPos, ctx.numPlayers);
+      while (hasMat(nextPlayerPos, G.combinations, ctx.playOrder)) {
+        nextPlayerPos = getNextPlayer(nextPlayerPos, ctx.numPlayers);
       }
-      return nextPlayer;
+      return nextPlayerPos;
     },
     playOrder: (G, ctx)  => ctx.random.Shuffle(ctx.playOrder),
   },
