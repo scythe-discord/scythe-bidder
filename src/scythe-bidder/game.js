@@ -49,7 +49,6 @@ const setup = ctx => {
         const temp = randomizedMats[j];
         randomizedMats[j] = randomizedMats[j+1];
         randomizedMats[j+1] = temp;
-        console.log(`Combination ${faction} ${mat} was redrawn`);
         j = j - 1;
       }
       else {
