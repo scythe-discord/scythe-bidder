@@ -5,7 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 const BidArea = props => {
   return(
     <Container className="text-center">
-      <Row style={{backgroundColor: '#f0f0f0'}}>
+      <Row style={{backgroundColor: '#c4bfb1'}}>
         <Col lg={2}></Col>
         <Col>Combination</Col>
         <Col>Current Bid</Col>
@@ -21,7 +21,7 @@ const BidArea = props => {
           isActive={props.isActive}
         />
       ))}
-      <Row style={{backgroundColor: '#f0f0f0'}}>
+      <Row style={{backgroundColor: '#c4bfb1'}}>
         <Col lg={2}></Col>
         <Col>Combination</Col>
         <Col>Current Bid</Col>
