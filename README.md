@@ -16,8 +16,13 @@ You will also see any lint errors in the console.
 
 ### `node -r esm src/server.js`
 
-Run an instance of the game server.
-The `Lobby` component must be changed to
+* Run an instance of the game server.
+
+The `Lobby` component **must be changed** to
 point to `http://localhost:8000` (both `gameServer` and `lobbyServer` variables)
+
+This happens because I didn't set a development environment yet 
+
+
 
 
