@@ -1,8 +1,6 @@
 import React from "react";
+import { Table } from 'react-bootstrap';
 
-const messageStyle = {
-  color: 'blue'
-}
 
 class TurnOrder extends React.Component {
   constructor(props) {
@@ -24,31 +22,27 @@ class TurnOrder extends React.Component {
   }
 
   showOrder(playerId, key, playerNum) {
-    const isLastPlayer = (key + 1 === playerNum);
     return (
-      <span key={key}>
+      <tr><td>
         <span className={this.highlightCurrentPlayer(playerId)}>
-          {this.players[playerId].name}
+          {key+1}{". "}{this.players[playerId].name}
         </span>
-        <span>
-          {!isLastPlayer && ", "}
-        </span>
-      </span>
+      </td></tr>
     )
-  }
-
-  showItsYourTurnMessage() {
-    return <p id='turnmessage' style={messageStyle}>{this.isActive && "It's your turn!"}</p>
   }
 
   render() {
     const playerNum = this.props.ctx.playOrder.length;
     return (
-      <div className={"text-center container"}>
-        <span>{"Bid order: "}</span>
-        {this.props.ctx.playOrder.map((playerId, key) => {
-          return this.showOrder(playerId, key, playerNum);
-        })}
+      <div className={"text-center container mt-4 mb-4"}>
+        <h4>{"Bid order: "}</h4>
+        <Table size="sm">
+          <tbody>
+            {this.props.ctx.playOrder.map((playerId, key) => {
+              return this.showOrder(playerId, key, playerNum);
+            })}
+          </tbody>
+      </Table>
       </div>
     )
   }
