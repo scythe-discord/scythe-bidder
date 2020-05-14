@@ -1,7 +1,7 @@
 import { Server } from 'boardgame.io/server';
 import path from 'path';
 import serve from 'koa-static';
-import { default as ScytheBidderGame } from './scythe-bidder/game';
+import { default as ScytheBidderGame } from './src/scythe-bidder/game';
 
 const server = Server({ games: [ScytheBidderGame] });
 const PORT = process.env.PORT || 8000;
