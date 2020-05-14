@@ -15,7 +15,7 @@ const importedGames = [
 
 export default () => (
   <div>
-    <h1>Lobby</h1>
+    <h1>Gaming Lobby</h1>
     <Lobby gameServer={server} lobbyServer={server} gameComponents={importedGames} />
   </div>
 )
