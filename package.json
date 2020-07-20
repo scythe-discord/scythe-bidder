@@ -9,7 +9,7 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-dom": "^16.13.1",
