@@ -13,7 +13,7 @@ const importedGames = [{ game: ScytheBidderGame, board: BiddingBoard }];
 
 export default () => (
   <main class="container">
-    <h1>Gaming Lobby</h1>
+    <h1>Auction Rooms</h1>
     <Lobby
       gameServer={server}
       lobbyServer={server}
