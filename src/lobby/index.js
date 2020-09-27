@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import routes from './routes';
+import routes from "./routes";
 
 // Any other additional setup for this module
 export default {

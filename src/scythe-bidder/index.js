@@ -6,13 +6,12 @@
  * https://opensource.org/licenses/MIT.
  */
 
- 
-import ScytheClient from './client'
+import ScytheClient from "./client";
 
 const routes = [
   {
-    path: '/scythe-bidding/',
-    text: 'ScytheBidding',
+    path: "/scythe-bidding/",
+    text: "ScytheBidding",
     component: ScytheClient,
   },
 ];
