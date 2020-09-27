@@ -6,11 +6,11 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import { NavLink, Route } from 'react-router-dom';
+import React from "react";
+import PropTypes from "prop-types";
+import { NavLink, Route } from "react-router-dom";
 
-const LiNavLink = props => {
+const LiNavLink = (props) => {
   const {
     to,
     exact,
@@ -24,7 +24,7 @@ const LiNavLink = props => {
   } = props;
   return (
     <Route
-      path={typeof to === 'object' ? to.pathname : to}
+      path={typeof to === "object" ? to.pathname : to}
       exact={exact}
       strict={strict}
     >
@@ -33,7 +33,7 @@ const LiNavLink = props => {
         return (
           <li
             className={
-              isActive ? [activeClassName, className].join(' ') : className
+              isActive ? [activeClassName, className].join(" ") : className
             }
             style={isActive ? { ...style, ...activeStyle } : style}
           >

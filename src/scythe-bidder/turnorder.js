@@ -1,6 +1,5 @@
 import React from "react";
-import { Table } from 'react-bootstrap';
-
+import { Table } from "react-bootstrap";
 
 class TurnOrder extends React.Component {
   constructor(props) {
@@ -12,9 +11,8 @@ class TurnOrder extends React.Component {
   }
 
   highlightCurrentPlayer(playerId) {
-    if (this.isCurrentPlayer(playerId))
-      return 'font-weight-bold';
-    return 'font-weight-normal';
+    if (this.isCurrentPlayer(playerId)) return "font-weight-bold";
+    return "font-weight-normal";
   }
 
   isCurrentPlayer(playerId) {
@@ -23,12 +21,16 @@ class TurnOrder extends React.Component {
 
   showOrder(playerId, key, playerNum) {
     return (
-      <tr><td>
-        <span className={this.highlightCurrentPlayer(playerId)}>
-          {key+1}{". "}{this.players[playerId].name}
-        </span>
-      </td></tr>
-    )
+      <tr>
+        <td>
+          <span className={this.highlightCurrentPlayer(playerId)}>
+            {key + 1}
+            {". "}
+            {this.players[playerId].name}
+          </span>
+        </td>
+      </tr>
+    );
   }
 
   render() {
@@ -42,9 +44,9 @@ class TurnOrder extends React.Component {
               return this.showOrder(playerId, key, playerNum);
             })}
           </tbody>
-      </Table>
+        </Table>
       </div>
-    )
+    );
   }
 }
 

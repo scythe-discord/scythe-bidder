@@ -1,9 +1,9 @@
 import React from "react";
-import Combination from './combination';
-import { Table } from 'react-bootstrap';
+import Combination from "./combination";
+import { Table } from "react-bootstrap";
 
-const BidArea = props => {
-  return(
+const BidArea = (props) => {
+  return (
     <Table striped bordered responsive>
       <thead>
         <tr>
@@ -26,7 +26,7 @@ const BidArea = props => {
         ))}
       </tbody>
     </Table>
-  )
-}
+  );
+};
 
 export default BidArea;

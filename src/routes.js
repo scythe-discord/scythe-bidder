@@ -6,11 +6,11 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import lobby from './lobby';
+import lobby from "./lobby";
 
 const routes = [
   {
-    name: 'Lobby',
+    name: "Lobby",
     routes: lobby.routes,
   },
 ];
