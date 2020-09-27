@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "boardgame.io": "^0.39.7",
+    "boardgame.io": "^0.39.16",
     "bootstrap": "^4.4.1",
     "bufferutil": "^4.0.1",
     "esm": "^3.2.25",
@@ -22,7 +22,7 @@
   "engines": {
     "node": "10.20.1",
     "npm": "6.14.4",
-    "yarn": "1.22.4"
+    "yarn": "1.22.5"
   },
   "scripts": {
     "start": "react-scripts start",
