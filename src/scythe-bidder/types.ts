@@ -1,0 +1,26 @@
+import { ActivePlayers, PlayerID } from "boardgame.io";
+import { factions, mats } from "./constants";
+
+export type Mat = typeof mats[number];
+export type Faction = typeof factions[number];
+
+export type Player = {
+  id: any;
+  name: string;
+};
+
+export type Combination = {
+  mat: Mat;
+  faction: Faction;
+  currentBid: number;
+  currentHolder: Player | null;
+};
+
+export type GameState = {
+  combinations: Array<Combination>;
+  players: {
+    [key: string]: Player;
+  };
+  endGame: boolean;
+  gameLogger: Array<string>;
+};
