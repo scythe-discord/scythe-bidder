@@ -3,6 +3,9 @@ import TurnOrder from "./turnorder";
 import BidArea from "./bidarea";
 import GameLog from "./gamelog";
 import { Container } from "react-bootstrap";
+import { Combination, GameState, Player } from "./types";
+import { Ctx, MoveMap } from "boardgame.io";
+import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 
 const messageStyle = {
   color: "blue",
@@ -17,7 +20,7 @@ let playerInfo = [
 
 const rulesText = "Scythe Auction v0.1.0";
 
-function showGameEndMessage(gameOver) {
+function showGameEndMessage(gameOver?: Array<Combination>) {
   if (typeof gameOver === "undefined") {
     return false;
   }
@@ -30,14 +33,22 @@ function showGameEndMessage(gameOver) {
           {" - $"}
           {c.currentBid}
           {" to "}
-          {c.currentHolder.name}
+          {c.currentHolder!.name}
         </p>
       ))}
     </Container>
   );
 }
 
-const BiddingBoard = (props) => {
+const BiddingBoard = (props: {
+  G: GameState;
+  playerID: number;
+  isActive: boolean;
+  moves: MoveMap<GameState, Ctx>;
+  events: EventsAPI;
+  gameMetadata?: Array<Player>;
+  ctx: Ctx;
+}) => {
   const { G, playerID, isActive, moves, events, gameMetadata, ctx } = props;
   if (typeof gameMetadata !== "undefined") {
     playerInfo = [...gameMetadata];

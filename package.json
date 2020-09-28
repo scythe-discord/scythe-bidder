@@ -34,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "ts-node --script-mode server/index"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.161",
     "husky": ">=4",
     "lint-staged": ">=10",
     "prettier": "2.1.2",

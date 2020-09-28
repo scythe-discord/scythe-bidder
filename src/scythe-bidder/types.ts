@@ -1,4 +1,3 @@
-import { ActivePlayers, PlayerID } from "boardgame.io";
 import { factions, mats } from "./constants";
 
 export type Mat = typeof mats[number];
@@ -24,3 +23,10 @@ export type GameState = {
   endGame: boolean;
   gameLogger: Array<string>;
 };
+
+export type ClientSideBid = (
+  faction: Faction,
+  mat: Mat,
+  bid: number,
+  player: Player
+) => void;

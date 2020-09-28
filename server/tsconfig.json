@@ -3,7 +3,7 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "strictNullChecks": true,
-    "module": "esnext",
+    "module": "commonjs",
     "jsx": "react",
     "target": "es5",
     "allowJs": true,
@@ -18,6 +18,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./src/"],
+  "include": ["."],
   "exclude": ["./server"]
 }
