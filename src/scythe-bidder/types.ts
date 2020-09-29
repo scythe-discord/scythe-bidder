@@ -1,3 +1,4 @@
+import { Game } from "boardgame.io";
 import { factions, mats } from "./constants";
 
 export type Mat = typeof mats[number];
@@ -30,3 +31,8 @@ export type ClientSideBid = (
   bid: number,
   player: Player
 ) => void;
+
+export interface GameWithMinMaxPlayers extends Game {
+  minPlayers: number;
+  maxPlayers: number;
+}

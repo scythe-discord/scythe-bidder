@@ -1,7 +1,13 @@
 import { Ctx, Game } from "boardgame.io";
 import { factions, mats } from "./constants";
 import { bid } from "./moves";
-import { Combination, Faction, GameState, Mat } from "./types";
+import {
+  Combination,
+  Faction,
+  GameState,
+  GameWithMinMaxPlayers,
+  Mat,
+} from "./types";
 
 const endIf = (G: GameState) => {
   let endGame = true;
@@ -78,7 +84,7 @@ const turn = {
   },
 };
 
-const ScytheBidderGame: Game = {
+const ScytheBidderGame: GameWithMinMaxPlayers = {
   name: "scythe-bidder",
   setup,
   moves: {
@@ -86,6 +92,8 @@ const ScytheBidderGame: Game = {
   },
   endIf,
   turn,
+  minPlayers: 2,
+  maxPlayers: 7,
 };
 
 export default ScytheBidderGame;
