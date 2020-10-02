@@ -1,1 +1,1 @@
-web: node -r esm server.js
+web: npx ts-node --script-mode server/index
