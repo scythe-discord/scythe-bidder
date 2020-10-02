@@ -1,4 +1,4 @@
-import { Ctx, Game } from "boardgame.io";
+import { Ctx } from "boardgame.io";
 import { factions, mats } from "./constants";
 import { bid } from "./moves";
 import {
