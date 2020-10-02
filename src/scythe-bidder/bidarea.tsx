@@ -1,16 +1,14 @@
 import React from "react";
 import FactionMatCombination from "./faction-mat-combination";
 import { Table } from "react-bootstrap";
-import { ClientSideBid, GameState, Player } from "./types";
+import { GameState, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 
 const BidArea = (props: {
   G: GameState;
   isActive: boolean;
-  moves: {
-    bid: ClientSideBid;
-  };
+  moves: Record<string, (...args: any[]) => void>;
   events: EventsAPI;
   playerInfo: Array<Player>;
   ctx: Ctx;
