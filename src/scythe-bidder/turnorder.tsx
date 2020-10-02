@@ -1,32 +1,38 @@
+import { Ctx } from "boardgame.io";
 import React from "react";
 import { Table } from "react-bootstrap";
+import { Player } from "./types";
 
-class TurnOrder extends React.Component {
-  constructor(props) {
-    super(props);
-    this.currentPlayer = this.props.ctx.currentPlayer;
-    this.players = this.props.players;
-    this.playerID = this.props.playerID;
-    this.isActive = this.props.isActive;
-  }
+interface Props {
+  ctx: Ctx;
+  players: Array<Player>;
+  playerID: string;
+  isActive: boolean;
+}
 
-  highlightCurrentPlayer(playerId) {
+class TurnOrder extends React.Component<Props> {
+  currentPlayer = this.props.ctx.currentPlayer;
+  players = this.props.players;
+  playerID = this.props.playerID;
+  isActive = this.props.isActive;
+
+  highlightCurrentPlayer(playerId: string) {
     if (this.isCurrentPlayer(playerId)) return "font-weight-bold";
     return "font-weight-normal";
   }
 
-  isCurrentPlayer(playerId) {
+  isCurrentPlayer(playerId: string) {
     return this.props.ctx.currentPlayer === playerId;
   }
 
-  showOrder(playerId, key, playerNum) {
+  showOrder(playerId: string, key: number, playerNum: number) {
     return (
       <tr>
         <td>
           <span className={this.highlightCurrentPlayer(playerId)}>
             {key + 1}
             {". "}
-            {this.players[playerId].name}
+            {this.players[parseInt(playerId)].name}
           </span>
         </td>
       </tr>
