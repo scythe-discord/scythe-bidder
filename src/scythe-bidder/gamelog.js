@@ -1,7 +1,6 @@
 import React from "react";
-import { GameState } from "./types";
 
-const GameLog = (props: { G: GameState }) => {
+const GameLog = (props) => {
   const { G } = props;
   return (
     <ul className={"list-group"}>

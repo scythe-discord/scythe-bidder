@@ -1,14 +1,4 @@
-import { Ctx } from "boardgame.io";
-import { Faction, GameState, Mat, Player } from "./types";
-
-const bid = (
-  G: GameState,
-  ctx: Ctx,
-  faction: Faction,
-  mat: Mat,
-  bidValue: number,
-  player: Player
-) => {
+const bid = (G, ctx, faction, mat, bidValue, player) => {
   const newCombination = {
     currentHolder: { ...player },
     faction,

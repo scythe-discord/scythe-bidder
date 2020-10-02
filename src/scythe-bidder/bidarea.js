@@ -1,20 +1,8 @@
 import React from "react";
-import FactionMatCombination from "./faction-mat-combination";
+import Combination from "./combination";
 import { Table } from "react-bootstrap";
-import { ClientSideBid, GameState, Player } from "./types";
-import { Ctx } from "boardgame.io";
-import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 
-const BidArea = (props: {
-  G: GameState;
-  isActive: boolean;
-  moves: {
-    bid: ClientSideBid;
-  };
-  events: EventsAPI;
-  playerInfo: Array<Player>;
-  ctx: Ctx;
-}) => {
+const BidArea = (props) => {
   return (
     <Table striped bordered responsive>
       <thead>
@@ -26,7 +14,7 @@ const BidArea = (props: {
       </thead>
       <tbody>
         {props.G.combinations.map((c, key) => (
-          <FactionMatCombination
+          <Combination
             combination={c}
             moves={props.moves}
             events={props.events}

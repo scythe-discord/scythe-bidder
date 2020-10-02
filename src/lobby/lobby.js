@@ -4,12 +4,15 @@ import BiddingBoard from "../scythe-bidder/board";
 import ScytheBidderGame from "../scythe-bidder/game";
 import "./lobby.css";
 
+ScytheBidderGame.minPlayers = 2;
+ScytheBidderGame.maxPlayers = 7;
+
 const server = `https://${window.location.hostname}`;
 
 const importedGames = [{ game: ScytheBidderGame, board: BiddingBoard }];
 
 export default () => (
-  <main className="container">
+  <main class="container">
     <h1>Auction Rooms</h1>
     <Lobby
       gameServer={server}

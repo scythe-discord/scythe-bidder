@@ -1,30 +1,41 @@
-import { Ctx } from "boardgame.io";
-import { factions, mats } from "./constants";
 import { bid } from "./moves";
-import {
-  Combination,
-  Faction,
-  GameState,
-  GameWithMinMaxPlayers,
-  Mat,
-} from "./types";
 
-const endIf = (G: GameState) => {
+const mats = [
+  "Industrial",
+  "Engineering",
+  "Militant",
+  "Patriotic",
+  "Innovative",
+  "Mechanical",
+  "Agricultural",
+];
+
+const factions = [
+  "Togawa",
+  "Crimea",
+  "Saxony",
+  "Polania",
+  "Albion",
+  "Nordic",
+  "Rusviet",
+];
+
+const endIf = (G, ctx) => {
   let endGame = true;
   for (const combination of G.combinations) {
-    if (!combination.currentHolder) endGame = false;
+    if (combination.currentHolder === "") endGame = false;
   }
   if (endGame === true) return G.combinations;
 };
 
-const checkBannedCombos = (faction: Faction, mat: Mat) =>
+const checkBannedCombos = (faction, mat) =>
   (faction === "Rusviet" && mat === "Industrial") ||
   (faction === "Crimea" && mat === "Patriotic");
 
-const setup = (ctx: Ctx) => {
-  let gameCombinations: Array<Combination> = [];
-  let randomizedMats = ctx.random!.Shuffle([...mats]);
-  let randomizedFactions = ctx.random!.Shuffle([...factions]);
+const setup = (ctx) => {
+  let gameCombinations = [];
+  let randomizedMats = ctx.random.Shuffle(mats);
+  let randomizedFactions = ctx.random.Shuffle(factions);
   for (let j = 0; j < ctx.numPlayers; j++) {
     const mat = randomizedMats[j];
     const faction = randomizedFactions[j];
@@ -35,12 +46,7 @@ const setup = (ctx: Ctx) => {
         randomizedMats[j + 1] = temp;
         j = j - 1;
       } else {
-        const combination = {
-          mat,
-          faction,
-          currentBid: -1,
-          currentHolder: null,
-        };
+        const combination = { mat, faction, currentBid: -1, currentHolder: "" };
         gameCombinations.push(combination);
       }
     }
@@ -53,17 +59,12 @@ const setup = (ctx: Ctx) => {
   };
 };
 
-const getNextPlayer = (playerId: number, numPlayers: number) =>
-  (playerId + 1) % numPlayers;
+const getNextPlayer = (playerId, numPlayers) => (playerId + 1) % numPlayers;
 
-const hasMat = (
-  playerId: number,
-  combinations: Array<Combination>,
-  playOrder: string[]
-) => {
+const hasMat = (playerId, combinations, playOrder) => {
   const player = playOrder[playerId];
   for (const c of combinations) {
-    if (parseInt(c.currentHolder?.id) === parseInt(player)) {
+    if (parseInt(c.currentHolder.id) === parseInt(player)) {
       return true;
     }
   }
@@ -72,19 +73,19 @@ const hasMat = (
 
 const turn = {
   order: {
-    first: (G: GameState, ctx: Ctx) => 0,
-    next: (G: GameState, ctx: Ctx) => {
+    first: (G, ctx) => 0,
+    next: (G, ctx) => {
       let nextPlayerPos = getNextPlayer(ctx.playOrderPos, ctx.numPlayers);
       while (hasMat(nextPlayerPos, G.combinations, ctx.playOrder)) {
         nextPlayerPos = getNextPlayer(nextPlayerPos, ctx.numPlayers);
       }
       return nextPlayerPos;
     },
-    playOrder: (G: GameState, ctx: Ctx) => ctx.random!.Shuffle(ctx.playOrder),
+    playOrder: (G, ctx) => ctx.random.Shuffle(ctx.playOrder),
   },
 };
 
-const ScytheBidderGame: GameWithMinMaxPlayers = {
+const ScytheBidderGame = {
   name: "scythe-bidder",
   setup,
   moves: {
@@ -92,8 +93,6 @@ const ScytheBidderGame: GameWithMinMaxPlayers = {
   },
   endIf,
   turn,
-  minPlayers: 2,
-  maxPlayers: 7,
 };
 
 export default ScytheBidderGame;
