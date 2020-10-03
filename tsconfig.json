@@ -19,5 +19,6 @@
     "noEmit": true
   },
   "include": ["./src/"],
-  "exclude": ["./server"]
+  "exclude": ["./server"],
+  "files": ["src/types.d.ts"]
 }
