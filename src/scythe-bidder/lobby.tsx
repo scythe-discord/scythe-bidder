@@ -3,7 +3,17 @@
 import React from "react";
 import { jsx } from "@emotion/core";
 import { LobbyAPI } from "boardgame.io";
-import { Row, Col, Card, Input, Button, Table, Spin, notification } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  Input,
+  Button,
+  Table,
+  Spin,
+  notification,
+  Form,
+} from "antd";
 import CreateRoom from "./create-room";
 import client from "./client";
 import { SCYTHE_BIDDER } from "./constants";
@@ -150,21 +160,31 @@ export default function Lobby() {
             </Button>
           ) : (
             <div css={{ display: "flex" }}>
-              <Input
-                type="text"
-                placeholder="Name"
-                value={tempPlayerName}
-                onChange={(e) => {
-                  setTempPlayerName(e.currentTarget.value);
+              <Form
+                layout="inline"
+                css={{
+                  display: "flex",
+                  flexWrap: "nowrap",
+                  ".ant-form-item:first-child": { flex: "1 1 auto" },
+                  ".ant-form-item:last-child": { marginRight: 0 },
                 }}
-              />
-              <Button
-                css={{ marginLeft: 12 }}
-                type="primary"
-                onClick={onSetName}
               >
-                Confirm
-              </Button>
+                <Form.Item>
+                  <Input
+                    type="text"
+                    placeholder="Name"
+                    value={tempPlayerName}
+                    onChange={(e) => {
+                      setTempPlayerName(e.currentTarget.value);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item css={{ margin: 0 }}>
+                  <Button type="primary" onClick={onSetName} htmlType="submit">
+                    Confirm
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           )}
         </Card>
