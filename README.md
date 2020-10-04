@@ -23,6 +23,6 @@ point to `http://localhost:8000` (both `gameServer` and `lobbyServer` variables)
 
 This happens because I didn't set a development environment yet 
 
+## Contributing
 
-
-
+Branch off `development` branch and open PR requests against it.
