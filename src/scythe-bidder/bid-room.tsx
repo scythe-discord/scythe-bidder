@@ -14,6 +14,7 @@ import Lockr from "lockr";
 import { _ClientImpl } from "boardgame.io/dist/types/src/client/client";
 import client from "./client";
 import { Spin } from "antd";
+import { SERVER_URL } from "./config";
 
 type GameState = {
   G: any;
@@ -33,7 +34,7 @@ export default function BidRoom() {
         numPlayers: currentMatchInfo.numPlayers,
         playerID: currentMatchInfo.playerId,
         matchID: matchId,
-        multiplayer: SocketIO({ server: process.env.REACT_APP_SERVER_URL }),
+        multiplayer: SocketIO({ server: SERVER_URL }),
         credentials: Lockr.get<string | undefined>(CREDENTIALS),
         debug: false,
       });

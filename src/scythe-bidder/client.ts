@@ -1,7 +1,8 @@
 import { LobbyClient } from "boardgame.io/client";
+import { SERVER_URL } from "./config";
 
 const client = new LobbyClient({
-  server: process.env.REACT_APP_SERVER_URL,
+  server: SERVER_URL,
 });
 
 export default client;
