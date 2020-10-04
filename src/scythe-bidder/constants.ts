@@ -19,3 +19,10 @@ export const factions = [
 ] as const;
 
 export const SCYTHE_BIDDER = "scythe-bidder";
+
+export const PLAYER_NAME = "playerName";
+export const CREDENTIALS = "credentials";
+export const CURRENT_MATCH_INFO = "currentMatchInfo";
+
+export const MIN_PLAYERS = 2;
+export const MAX_PLAYERS = 7;

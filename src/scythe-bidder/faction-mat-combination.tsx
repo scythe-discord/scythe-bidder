@@ -1,4 +1,7 @@
+/** @jsx jsx */
+
 import React from "react";
+import { jsx } from "@emotion/core";
 import _ from "lodash";
 import { Button, Image } from "react-bootstrap";
 import { Combination, Faction, Mat, Player } from "./types";

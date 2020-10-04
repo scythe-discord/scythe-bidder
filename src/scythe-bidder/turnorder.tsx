@@ -1,59 +1,45 @@
+/** @jsx jsx */
+
+import { jsx } from "@emotion/core";
+import { List } from "antd";
 import { Ctx } from "boardgame.io";
-import React from "react";
-import { Table } from "react-bootstrap";
 import { Player } from "./types";
 
 interface Props {
   ctx: Ctx;
   players: Array<Player>;
-  playerID: string;
+  playerID: string | null;
   isActive: boolean;
 }
 
-class TurnOrder extends React.Component<Props> {
-  currentPlayer = this.props.ctx.currentPlayer;
-  players = this.props.players;
-  playerID = this.props.playerID;
-  isActive = this.props.isActive;
-
-  highlightCurrentPlayer(playerId: string) {
-    if (this.isCurrentPlayer(playerId)) return "font-weight-bold";
-    return "font-weight-normal";
-  }
-
-  isCurrentPlayer(playerId: string) {
-    return this.props.ctx.currentPlayer === playerId;
-  }
-
-  showOrder(playerId: string, key: number, playerNum: number) {
-    return (
-      <tr>
-        <td>
-          <span className={this.highlightCurrentPlayer(playerId)}>
-            {key + 1}
-            {". "}
-            {this.players[parseInt(playerId)].name}
-          </span>
-        </td>
-      </tr>
-    );
-  }
-
-  render() {
-    const playerNum = this.props.ctx.playOrder.length;
-    return (
-      <div className={"text-center container mt-4 mb-4"}>
-        <h4>{"Bid order: "}</h4>
-        <Table size="sm">
-          <tbody>
-            {this.props.ctx.playOrder.map((playerId, key) => {
-              return this.showOrder(playerId, key, playerNum);
-            })}
-          </tbody>
-        </Table>
-      </div>
-    );
-  }
-}
+const TurnOrder = (props: Props) => {
+  return (
+    <List
+      header={
+        <div css={{ padding: "0 24px", fontWeight: 500 }}>
+          {props.ctx.gameover
+            ? "Auction ended"
+            : props.isActive
+            ? "It's your turn!"
+            : `Current player: ${
+                props.players[parseInt(props.ctx.currentPlayer)].name
+              }`}
+        </div>
+      }
+      dataSource={props.ctx.playOrder}
+      renderItem={(playerId, idx) => (
+        <List.Item
+          css={{
+            padding: "12px 24px",
+            fontWeight: props.ctx.currentPlayer === playerId ? 500 : 400,
+          }}
+        >
+          {idx + 1}. {props.players[parseInt(playerId)].name}
+        </List.Item>
+      )}
+      css={{ background: "#fff" }}
+    ></List>
+  );
+};
 
 export default TurnOrder;

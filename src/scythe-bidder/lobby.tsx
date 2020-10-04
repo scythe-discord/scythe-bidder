@@ -8,14 +8,12 @@ import CreateRoom from "./create-room";
 import client from "./client";
 import { SCYTHE_BIDDER } from "./constants";
 import Lockr from "lockr";
-import { Player } from "./types";
+import { MatchInfo, Player } from "./types";
 import Animate from "rc-animate";
 import { mq } from "./breakpoints";
 import { Link } from "react-router-dom";
-
-const PLAYER_NAME = "playerName";
-const CREDENTIALS = "credentials";
-const CURRENT_MATCH_INFO = "currentMatchInfo";
+import { PLAYER_NAME, CREDENTIALS, CURRENT_MATCH_INFO } from "./constants";
+import { cleanupAfterLogout } from "./utils";
 
 export default function Lobby() {
   const [matches, setMatches] = React.useState<Array<LobbyAPI.Match>>([]);
@@ -30,10 +28,7 @@ export default function Lobby() {
     Lockr.get<string | undefined>(CREDENTIALS, undefined)
   );
   const currentMatchInfoRef = React.useRef(
-    Lockr.get<{ matchId: string; playerId: string } | undefined>(
-      CURRENT_MATCH_INFO,
-      undefined
-    )
+    Lockr.get<MatchInfo | undefined>(CURRENT_MATCH_INFO, undefined)
   );
 
   const fetchMatches = React.useCallback(async () => {
@@ -65,6 +60,7 @@ export default function Lobby() {
         const matchInfo = {
           playerId: String(playerId),
           matchId,
+          numPlayers: match.players.length,
         };
         credentialsRef.current = playerCredentials;
         currentMatchInfoRef.current = matchInfo;
@@ -81,7 +77,11 @@ export default function Lobby() {
   );
 
   const onLeave = React.useCallback(async () => {
-    if (!currentMatchInfoRef.current || !credentialsRef.current) {
+    if (
+      !currentMatchInfoRef.current ||
+      !credentialsRef.current ||
+      !currentMatchInfoRef.current.playerId
+    ) {
       return;
     }
     setLeaveLoading(true);
@@ -101,7 +101,7 @@ export default function Lobby() {
       notification.error({ message: String(e) });
     }
     setLeaveLoading(false);
-  }, []);
+  }, [fetchMatches]);
 
   const onSetName = React.useCallback(() => {
     const trimmed = tempPlayerName.trim();
@@ -125,11 +125,13 @@ export default function Lobby() {
     if (savedPlayerName) {
       Lockr.set(PLAYER_NAME, savedPlayerName);
     } else {
-      Lockr.rm(PLAYER_NAME);
-      Lockr.rm(CREDENTIALS);
-      Lockr.rm(CURRENT_MATCH_INFO);
+      cleanupAfterLogout();
     }
   }, [savedPlayerName]);
+
+  const playerIsInMatch = matches.some(
+    (match) => match.matchID === currentMatchInfoRef.current?.matchId
+  );
 
   return (
     <Row gutter={24}>
@@ -140,7 +142,9 @@ export default function Lobby() {
           }
         >
           {savedPlayerName ? (
-            <Button onClick={onLogout}>Logout</Button>
+            <Button onClick={onLogout} danger>
+              Logout
+            </Button>
           ) : (
             <div css={{ display: "flex" }}>
               <Input
@@ -210,42 +214,68 @@ export default function Lobby() {
                 };
               }}
             />
-            <Table.Column width={60} title="IFA" render={() => null} />
+            {/* <Table.Column width={60} title="IFA" render={() => null} /> */}
             <Table.Column
               width={180}
               dataIndex="matchID"
               render={(matchId, match: LobbyAPI.Match) => {
-                if (!savedPlayerName) {
-                  if (
-                    match.players.length ===
-                    match.players.filter((p) => !!p.name).length
-                  ) {
-                    return <Button>Spectate</Button>;
-                  }
-                  return null;
-                }
-                if (currentMatchInfoRef.current?.matchId === matchId) {
-                  return (
-                    <div>
-                      <Link to={`/game/${matchId}`}>
-                        <Button css={{ marginRight: 12 }}>Play</Button>
-                      </Link>
+                const matchIsFull =
+                  match.players.length ===
+                  match.players.filter((p) => !!p.name).length;
+                let content = null;
+                if (
+                  currentMatchInfoRef.current?.matchId === matchId &&
+                  savedPlayerName
+                ) {
+                  content = (
+                    <React.Fragment>
+                      <Animate transitionName="fade" transitionAppear>
+                        {matchIsFull && (
+                          <Link to={`/game/${matchId}`}>
+                            <Button css={{ marginRight: 12 }}>Play</Button>
+                          </Link>
+                        )}
+                      </Animate>
                       <Button onClick={onLeave} loading={leaveLoading}>
                         Leave
                       </Button>
-                    </div>
+                    </React.Fragment>
                   );
+                } else if (!playerIsInMatch) {
+                  content =
+                    savedPlayerName && !matchIsFull ? (
+                      <Button
+                        onClick={() => {
+                          onJoin(matchId);
+                        }}
+                        loading={joinLoading}
+                      >
+                        Join
+                      </Button>
+                    ) : (
+                      <Link
+                        to={`/game/${matchId}`}
+                        onClick={() => {
+                          Lockr.set(CURRENT_MATCH_INFO, {
+                            matchId,
+                            numPlayers: match.players.length,
+                          });
+                        }}
+                      >
+                        <Button>Spectate</Button>
+                      </Link>
+                    );
                 }
                 return (
-                  <Button
-                    css={{ marginRight: 12 }}
-                    onClick={() => {
-                      onJoin(matchId);
+                  <div
+                    css={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      minHeight: 32,
                     }}
-                    loading={joinLoading}
                   >
-                    Join
-                  </Button>
+                    {content}
+                  </div>
                 );
               }}
             />

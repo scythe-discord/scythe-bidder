@@ -1,44 +1,20 @@
+/** @jsx jsx */
+
 import React from "react";
+import { jsx } from "@emotion/core";
 import TurnOrder from "./turnorder";
 import BidArea from "./bidarea";
 import GameLog from "./gamelog";
-import { Container } from "react-bootstrap";
-import { Combination, GameState, Player } from "./types";
+import { Combination, GameState, MatchInfo, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
-
-const messageStyle = {
-  color: "blue",
-};
-
-let playerInfo = [
-  { name: "Player 1", id: 0 },
-  { name: "Player 2", id: 1 },
-  { name: "Player 3", id: 2 },
-  { name: "Player 4", id: 3 },
-];
-
-const rulesText = "Scythe Auction v0.1.0";
-
-function showGameEndMessage(gameOver?: Array<Combination>) {
-  if (typeof gameOver === "undefined") {
-    return false;
-  }
-  return (
-    <Container className="font-weight-bold justify-content-center">
-      <h3>Auction Ended!</h3>
-      {gameOver.map((c, key) => (
-        <p key={key}>
-          {c.faction} {c.mat}
-          {" - $"}
-          {c.currentBid}
-          {" to "}
-          {c.currentHolder!.name}
-        </p>
-      ))}
-    </Container>
-  );
-}
+import { Button, Card, Col, Row } from "antd";
+import client from "./client";
+import { CREDENTIALS, CURRENT_MATCH_INFO, SCYTHE_BIDDER } from "./constants";
+import Lockr from "lockr";
+import { useHistory } from "react-router-dom";
+import { cleanupAfterLogout } from "./utils";
+import { mq } from "./breakpoints";
 
 const BiddingBoard = (props: {
   G: GameState;
@@ -50,42 +26,98 @@ const BiddingBoard = (props: {
   ctx: Ctx;
 }) => {
   const { G, playerID, isActive, moves, events, gameMetadata, ctx } = props;
-  if (!playerID) {
+
+  const matchInfo = Lockr.get<MatchInfo | undefined>(CURRENT_MATCH_INFO);
+  const credentials = Lockr.get<string | undefined>(CREDENTIALS);
+
+  const history = useHistory();
+
+  const onLeave = React.useCallback(async () => {
+    if (matchInfo && playerID && credentials) {
+      await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
+        playerID,
+        credentials,
+      });
+    }
+    Lockr.rm(CURRENT_MATCH_INFO);
+    history.push("/");
+  }, [credentials, matchInfo, playerID, history]);
+
+  const onLogout = React.useCallback(async () => {
+    if (matchInfo && playerID && credentials) {
+      await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
+        playerID,
+        credentials,
+      });
+    }
+    cleanupAfterLogout();
+    history.push("/");
+  }, [matchInfo, playerID, credentials, history]);
+
+  if (!gameMetadata) {
     return null;
   }
-  if (typeof gameMetadata !== "undefined") {
-    playerInfo = [...gameMetadata];
-  }
+
   return (
-    <div>
-      <div id="rules">
-        <p id="rulesText" style={{ textDecoration: "underline" }}>
-          {rulesText}
-        </p>
-      </div>
-      {isActive && <p style={messageStyle}>It's your turn</p>}
-      {!ctx.gameover && (
-        <Container className="justify-content-left">
+    <React.Fragment>
+      <Row gutter={24}>
+        <Col xs={24} lg={7}>
           <TurnOrder
-            players={playerInfo}
+            players={gameMetadata}
             ctx={ctx}
             playerID={playerID}
             isActive={isActive}
           />
-        </Container>
-      )}
-      {showGameEndMessage(ctx.gameover) || (
-        <BidArea
-          isActive={isActive}
-          ctx={ctx}
-          G={G}
-          moves={moves}
-          events={events}
-          playerInfo={playerInfo}
-        />
-      )}
-      <GameLog G={G} />
-    </div>
+          <div css={{ marginTop: 24 }}>
+            <Button onClick={onLeave}>Leave game</Button>
+            <Button css={{ marginLeft: 12 }} danger onClick={onLogout}>
+              Logout
+            </Button>
+          </div>
+        </Col>
+        <Col xs={24} lg={17} css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}>
+          {ctx.gameover ? (
+            <Card title="Auction ended!">
+              {ctx.gameover.map((c: Combination, key: number) => (
+                <div
+                  key={key}
+                  css={{
+                    display: "flex",
+                    alignItems: "center",
+                    "&:not(:first-child)": { marginTop: 12 },
+                  }}
+                >
+                  {
+                    <img
+                      src={require(`./static/images/${c.faction}.png`)}
+                      css={{ width: 24, height: 24, marginRight: 8 }}
+                      alt={c.faction}
+                    />
+                  }
+                  <strong css={{ fontWeight: 500 }}>
+                    {c.faction} {c.mat}
+                  </strong>
+                  {" - $"}
+                  {c.currentBid}
+                  {" to "}
+                  {c.currentHolder!.name}
+                </div>
+              ))}
+            </Card>
+          ) : (
+            <BidArea
+              isActive={isActive}
+              ctx={ctx}
+              G={G}
+              moves={moves}
+              events={events}
+              playerInfo={gameMetadata}
+            />
+          )}
+          <GameLog G={G} />
+        </Col>
+      </Row>
+    </React.Fragment>
   );
 };
 
