@@ -14,11 +14,15 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-### `yarn server`
+### `node -r esm src/server.js`
 
-Runs an instance of the game server.
+* Run an instance of the game server.
 
-### `yarn dev`
+The `Lobby` component **must be changed** to
+point to `http://localhost:8000` (both `gameServer` and `lobbyServer` variables)
 
-Runs both the client-side app and server in development mode.<br />
-Reloads the app or restarts the server if any edits are made.
+This happens because I didn't set a development environment yet 
+
+## Contributing
+
+Branch off `development` branch and open PR requests against it.
