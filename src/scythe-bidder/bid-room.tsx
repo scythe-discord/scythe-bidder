@@ -64,6 +64,12 @@ export default function BidRoom() {
     } else {
       getMatchInfo();
     }
+    return () => {
+      if (!gameClientRef.current) {
+        return;
+      }
+      gameClientRef.current.stop();
+    };
   }, [init, matchId]);
 
   return gameState && gameClientRef.current ? (

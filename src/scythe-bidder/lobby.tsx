@@ -118,7 +118,10 @@ export default function Lobby() {
 
   React.useEffect(() => {
     fetchMatches();
-    setInterval(fetchMatches, 3000);
+    const interval = setInterval(fetchMatches, 3000);
+    return () => {
+      clearInterval(interval);
+    };
   }, [fetchMatches]);
 
   React.useEffect(() => {
