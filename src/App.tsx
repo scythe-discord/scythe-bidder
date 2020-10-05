@@ -9,6 +9,7 @@ import { Layout } from "antd";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BidRoom from "./scythe-bidder/bid-room";
 import { config } from "dotenv";
+import { mq } from "./scythe-bidder/breakpoints";
 
 config();
 
@@ -19,6 +20,7 @@ const App = () => (
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        padding: "0 24px",
       }}
     >
       <div
@@ -26,7 +28,10 @@ const App = () => (
           color: "white",
           fontWeight: 700,
           fontFamily: "Lato, sans-serif",
-          fontSize: 24,
+          fontSize: 20,
+          [mq[0]]: {
+            fontSize: 24,
+          },
         }}
       >
         Scythe Bidder
