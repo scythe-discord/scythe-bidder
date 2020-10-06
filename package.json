@@ -41,7 +41,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "ts-node --script-mode server/index"
+    "server": "ts-node --script-mode server/index",
+    "dev": "yarn concurrently \"nodemon\" \"yarn start\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,8 +62,10 @@
   "devDependencies": {
     "@types/lockr": "^0.8.6",
     "@types/lodash": "^4.14.161",
+    "concurrently": "^5.3.0",
     "husky": ">=4",
     "lint-staged": ">=10",
+    "nodemon": "^2.0.4",
     "prettier": "2.1.2",
     "source-map-loader": "^1.1.0",
     "ts-loader": "^8.0.4",
