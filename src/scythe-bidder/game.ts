@@ -27,18 +27,6 @@ const checkBannedCombos = (faction: Faction, mat: Mat) =>
   (faction === "Rusviet" && mat === "Industrial") ||
   (faction === "Crimea" && mat === "Patriotic");
 
-const getValidCombos = () => {
-  const validCombos: Array<Combination> = [];
-  for (const faction in factions) {
-    for (const mat in mats) {
-      if (!checkBannedCombos(faction as Faction, mat as Mat)) {
-        validCombos.push({ faction: faction as Faction, mat: mat as Mat });
-      }
-    }
-  }
-  return validCombos;
-};
-
 /*
   orderCombos() takes in an array of faction/player mat combinations
   and returns them in  the order in which they will play. 
