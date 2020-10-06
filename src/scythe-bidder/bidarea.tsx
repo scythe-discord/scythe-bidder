@@ -85,7 +85,15 @@ const BidArea = (props: {
   }, [props.G]);
 
   return (
-    <Table bordered dataSource={props.G.combinations}>
+    <Table
+      bordered
+      dataSource={props.G.combinations}
+      css={{
+        overflow: "auto",
+        tbody: { background: "#fff" },
+        ".ant-table": { overflow: "auto" },
+      }}
+    >
       <Table.Column
         css={{ background: "#fff" }}
         width={120}
