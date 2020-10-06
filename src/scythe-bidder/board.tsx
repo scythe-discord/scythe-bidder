@@ -10,7 +10,12 @@ import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 import { Button, Card, Col, Row } from "antd";
 import client from "./client";
-import { CREDENTIALS, CURRENT_MATCH_INFO, SCYTHE_BIDDER } from "./constants";
+import {
+  CREDENTIALS,
+  CURRENT_MATCH_INFO,
+  PLAYER_NAME,
+  SCYTHE_BIDDER,
+} from "./constants";
 import Lockr from "lockr";
 import { useHistory } from "react-router-dom";
 import { cleanupAfterLogout } from "./utils";
@@ -24,11 +29,22 @@ const BiddingBoard = (props: {
   events: EventsAPI;
   gameMetadata?: Array<Player>;
   ctx: Ctx;
+  matchId: string;
 }) => {
-  const { G, playerID, isActive, moves, events, gameMetadata, ctx } = props;
+  const {
+    G,
+    playerID,
+    isActive,
+    moves,
+    events,
+    gameMetadata,
+    ctx,
+    matchId,
+  } = props;
 
   const matchInfo = Lockr.get<MatchInfo | undefined>(CURRENT_MATCH_INFO);
   const credentials = Lockr.get<string | undefined>(CREDENTIALS);
+  const playerName = Lockr.get<string | undefined>(PLAYER_NAME);
 
   const history = useHistory();
 
@@ -44,6 +60,9 @@ const BiddingBoard = (props: {
   }, [credentials, matchInfo, playerID, history]);
 
   const onLogout = React.useCallback(async () => {
+    if (!playerName) {
+      return;
+    }
     if (matchInfo && playerID && credentials) {
       await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
         playerID,
@@ -52,7 +71,7 @@ const BiddingBoard = (props: {
     }
     cleanupAfterLogout();
     history.push("/");
-  }, [matchInfo, playerID, credentials, history]);
+  }, [matchInfo, playerID, credentials, history, playerName]);
 
   if (!gameMetadata) {
     return null;
@@ -69,10 +88,14 @@ const BiddingBoard = (props: {
             isActive={isActive}
           />
           <div css={{ marginTop: 24 }}>
-            <Button onClick={onLeave}>Leave game</Button>
-            <Button css={{ marginLeft: 12 }} danger onClick={onLogout}>
-              Logout
+            <Button onClick={onLeave}>
+              {matchInfo?.matchId === matchId ? "Leave game" : "Back to lobby"}
             </Button>
+            {playerName && (
+              <Button css={{ marginLeft: 12 }} danger onClick={onLogout}>
+                Logout
+              </Button>
+            )}
           </div>
         </Col>
         <Col xs={24} lg={17} css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}>

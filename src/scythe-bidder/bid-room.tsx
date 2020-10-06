@@ -81,6 +81,7 @@ export default function BidRoom() {
       events={gameClientRef.current.events}
       playerID={gameClientRef.current.playerID}
       gameMetadata={gameClientRef.current.matchData}
+      matchId={matchId}
     />
   ) : (
     <Spin css={{ display: "block", margin: 200 }} />
