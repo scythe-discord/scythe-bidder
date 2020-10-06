@@ -276,15 +276,7 @@ export default function Lobby() {
                         Join
                       </Button>
                     ) : (
-                      <Link
-                        to={`/game/${matchId}`}
-                        onClick={() => {
-                          Lockr.set(CURRENT_MATCH_INFO, {
-                            matchId,
-                            numPlayers: match.players.length,
-                          });
-                        }}
-                      >
+                      <Link to={`/game/${matchId}`}>
                         <Button>Spectate</Button>
                       </Link>
                     );
