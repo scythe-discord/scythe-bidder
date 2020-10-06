@@ -2,7 +2,6 @@ import { Ctx } from "boardgame.io";
 import { factions, mats } from "./constants";
 import { bid } from "./moves";
 import {
-  Combination,
   CombinationWithBid,
   Faction,
   GameState,
@@ -95,8 +94,11 @@ const setup = (ctx: Ctx) => {
         Math.floor(Math.random() * remainingPlayerMats.length)
       ];
 
-    remainingFactions.forEach((faction) =>
-      remainingCombos[faction].filter((mat) => mat !== pickedPlayerMat)
+    remainingFactions.forEach(
+      (faction) =>
+        (remainingCombos[faction] = remainingCombos[faction].filter(
+          (mat) => mat !== pickedPlayerMat
+        ))
     );
     delete remainingCombos[pickedFaction];
 
