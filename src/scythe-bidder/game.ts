@@ -3,11 +3,17 @@ import { factions, mats } from "./constants";
 import { bid } from "./moves";
 import {
   Combination,
+  CombinationWithBid,
   Faction,
   GameState,
   GameWithMinMaxPlayers,
   Mat,
 } from "./types";
+
+const matToIdx: { [key: string]: number } = {};
+mats.forEach((mat, idx) => {
+  matToIdx[mat] = idx;
+});
 
 const endIf = (G: GameState) => {
   let endGame = true;
@@ -21,32 +27,101 @@ const checkBannedCombos = (faction: Faction, mat: Mat) =>
   (faction === "Rusviet" && mat === "Industrial") ||
   (faction === "Crimea" && mat === "Patriotic");
 
-const setup = (ctx: Ctx) => {
-  let gameCombinations: Array<Combination> = [];
-  let randomizedMats = ctx.random!.Shuffle([...mats]);
-  let randomizedFactions = ctx.random!.Shuffle([...factions]);
-  for (let j = 0; j < ctx.numPlayers; j++) {
-    const mat = randomizedMats[j];
-    const faction = randomizedFactions[j];
-    if (j < 6) {
-      if (checkBannedCombos(faction, mat)) {
-        const temp = randomizedMats[j];
-        randomizedMats[j] = randomizedMats[j + 1];
-        randomizedMats[j + 1] = temp;
-        j = j - 1;
-      } else {
-        const combination = {
-          mat,
-          faction,
-          currentBid: -1,
-          currentHolder: null,
-        };
-        gameCombinations.push(combination);
+const getValidCombos = () => {
+  const validCombos: Array<Combination> = [];
+  for (const faction in factions) {
+    for (const mat in mats) {
+      if (!checkBannedCombos(faction as Faction, mat as Mat)) {
+        validCombos.push({ faction: faction as Faction, mat: mat as Mat });
       }
     }
   }
+  return validCombos;
+};
+
+/*
+  orderCombos() takes in an array of faction/player mat combinations
+  and returns them in  the order in which they will play. 
+  The player mat with the lowest starting priority (represented 
+  here by their index in the 'mats' array) goes first, then the 
+  other combinations follow in clockwise order determined by the 
+  placement of their faction on the board relative to
+  the first player.
+*/
+
+const orderCombos = (combinations: Array<CombinationWithBid>) => {
+  const firstCombo = combinations.reduce(
+    (firstSoFar: CombinationWithBid | null, currentCombo) => {
+      if (
+        firstSoFar === null ||
+        matToIdx[currentCombo.mat] < matToIdx[firstSoFar.mat]
+      ) {
+        return currentCombo;
+      }
+      return firstSoFar;
+    },
+    null
+  );
+
+  if (!firstCombo) {
+    return combinations;
+  }
+
+  // Find the index of the faction that will go first
+  const startingIdx = factions.findIndex(
+    (faction) => faction === firstCombo.faction
+  );
+
+  const combosByFaction: { [key: string]: CombinationWithBid } = {};
+  combinations.forEach((combo) => {
+    combosByFaction[combo.faction] = combo;
+  });
+
+  // Iterate through factions starting with the one that goes first,
+  // adding any combinations that are in play to the result
+  const orderedCombos = [];
+  for (let i = 0; i < factions.length; i++) {
+    const currentFaction = factions[(startingIdx + i) % factions.length];
+    if (combosByFaction[currentFaction]) {
+      orderedCombos.push(combosByFaction[currentFaction]);
+    }
+  }
+  return orderedCombos;
+};
+
+const setup = (ctx: Ctx) => {
+  let gameCombinations: Array<CombinationWithBid> = [];
+  const remainingCombos: { [key: string]: Array<Mat> } = {};
+  for (const faction of factions) {
+    remainingCombos[faction] = [
+      ...mats.filter((mat) => !checkBannedCombos(faction as Faction, mat)),
+    ];
+  }
+  for (let i = 0; i < ctx.numPlayers; i++) {
+    const remainingFactions = Object.keys(remainingCombos);
+    const pickedFaction =
+      remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
+    const remainingPlayerMats = remainingCombos[pickedFaction];
+    const pickedPlayerMat =
+      remainingPlayerMats[
+        Math.floor(Math.random() * remainingPlayerMats.length)
+      ];
+
+    remainingFactions.forEach((faction) =>
+      remainingCombos[faction].filter((mat) => mat !== pickedPlayerMat)
+    );
+    delete remainingCombos[pickedFaction];
+
+    gameCombinations.push({
+      faction: pickedFaction as Faction,
+      mat: pickedPlayerMat as Mat,
+      currentBid: -1,
+      currentHolder: null,
+    });
+  }
+
   return {
-    combinations: gameCombinations,
+    combinations: orderCombos(gameCombinations),
     players: {},
     endGame: false,
     gameLogger: ["Auction start!"],
@@ -58,7 +133,7 @@ const getNextPlayer = (playerId: number, numPlayers: number) =>
 
 const hasMat = (
   playerId: number,
-  combinations: Array<Combination>,
+  combinations: Array<CombinationWithBid>,
   playOrder: string[]
 ) => {
   const player = playOrder[playerId];

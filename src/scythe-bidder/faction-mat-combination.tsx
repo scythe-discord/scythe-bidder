@@ -4,12 +4,12 @@ import React from "react";
 import { jsx } from "@emotion/core";
 import _ from "lodash";
 import { Button, Image } from "react-bootstrap";
-import { Combination, Faction, Mat, Player } from "./types";
+import { CombinationWithBid, Faction, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 
 interface Props {
-  combination: Combination;
+  combination: CombinationWithBid;
   moves: Record<string, (...args: any[]) => void>;
   events: EventsAPI;
   players: Array<Player>;
