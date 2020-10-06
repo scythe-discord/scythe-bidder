@@ -5,7 +5,7 @@ import { jsx } from "@emotion/core";
 import TurnOrder from "./turnorder";
 import BidArea from "./bidarea";
 import GameLog from "./gamelog";
-import { Combination, GameState, MatchInfo, Player } from "./types";
+import { CombinationWithBid, GameState, MatchInfo, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
 import { Button, Card, Col, Row } from "antd";
@@ -101,7 +101,7 @@ const BiddingBoard = (props: {
         <Col xs={24} lg={17} css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}>
           {ctx.gameover ? (
             <Card title="Auction ended!">
-              {ctx.gameover.map((c: Combination, key: number) => (
+              {ctx.gameover.map((c: CombinationWithBid, key: number) => (
                 <div
                   key={key}
                   css={{

@@ -12,12 +12,15 @@ export type Player = {
 export type Combination = {
   mat: Mat;
   faction: Faction;
-  currentBid: number;
-  currentHolder: Player | null;
 };
 
+export interface CombinationWithBid extends Combination {
+  currentBid: number;
+  currentHolder: Player | null;
+}
+
 export type GameState = {
-  combinations: Array<Combination>;
+  combinations: Array<CombinationWithBid>;
   players: {
     [key: string]: Player;
   };
