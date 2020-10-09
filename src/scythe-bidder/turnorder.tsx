@@ -32,6 +32,8 @@ const TurnOrder = (props: Props) => {
           css={{
             padding: "12px 24px",
             fontWeight: props.ctx.currentPlayer === playerId ? 500 : 400,
+            background:
+              props.ctx.currentPlayer === playerId ? "#e6f7ff" : "#fff",
           }}
         >
           {idx + 1}. {props.players[parseInt(playerId)].name}
