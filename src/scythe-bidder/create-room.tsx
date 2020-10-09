@@ -10,7 +10,7 @@ import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [gameType, setGameType] = React.useState<string>(SCYTHE_BASE);
-  const [maxPlayers, setMaxPlayers] = React.useState(MAX_PLAYERS_BASE);
+  const maxPlayers = gameType === SCYTHE_BASE ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
@@ -92,9 +92,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                         placement   : 'topLeft',
                       });
                     }
-                    setMaxPlayers(MAX_PLAYERS_BASE);
-                  } else {
-                    setMaxPlayers(MAX_PLAYERS_IFA);
                   }
                 }}
                 placeholder="Base or IFA"
