@@ -86,9 +86,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   if (value === SCYTHE_BASE){
                     if (numPlayers > MAX_PLAYERS_BASE){
                       setNumPlayers(MAX_PLAYERS_BASE);
-                      notification["warning"]({
-                        message: 'Notification',
-                        description: 'Max players changed',
+                      notification.warning({
+                        message     : 'Warning',
+                        description : 'Max players changed',
+                        placement   : 'topLeft',
                       });
                     }
                     setMaxPlayers(MAX_PLAYERS_BASE);
