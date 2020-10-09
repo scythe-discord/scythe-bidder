@@ -1,6 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA } from "./constants";
-import { factions_base, factions_ifa, mats_base, mats_ifa } from "./constants";
+import { factions, mats, MIN_PLAYERS, MAX_PLAYERS, SCYTHE_BIDDER } from "./constants";
 import { bid } from "./moves";
 import {
   CombinationWithBid,
@@ -10,14 +9,9 @@ import {
   Mat,
 } from "./types";
 
-const matToIdxBase: { [key: string]: number } = {};
-mats_base.forEach((mat, idx) => {
-  matToIdxBase[mat] = idx;
-});
-
-const matToIdxIFA: { [key: string]: number } = {};
-mats_ifa.forEach((mat, idx) => {
-  matToIdxIFA[mat] = idx;
+const matToIdx: { [key: string]: number } = {};
+mats.forEach((mat, idx) => {
+  matToIdx[mat] = idx;
 });
 
 const endIf = (G: GameState) => {
@@ -47,7 +41,7 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
     (firstSoFar: CombinationWithBid | null, currentCombo) => {
       if (
         firstSoFar === null ||
-        matToIdxIFA[currentCombo.mat] < matToIdxIFA[firstSoFar.mat]
+        matToIdx[currentCombo.mat] < matToIdx[firstSoFar.mat]
       ) {
         return currentCombo;
       }
@@ -61,7 +55,7 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   }
 
   // Find the index of the faction that will go first
-  const startingIdx = factions_ifa.findIndex(
+  const startingIdx = factions.findIndex(
     (faction) => faction === firstCombo.faction
   );
 
@@ -73,8 +67,8 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   // Iterate through factions starting with the one that goes first,
   // adding any combinations that are in play to the result
   const orderedCombos = [];
-  for (let i = 0; i < factions_ifa.length; i++) {
-    const currentFaction = factions_ifa[(startingIdx + i) % factions_ifa.length];
+  for (let i = 0; i < factions.length; i++) {
+    const currentFaction = factions[(startingIdx + i) % factions.length];
     if (combosByFaction[currentFaction]) {
       orderedCombos.push(combosByFaction[currentFaction]);
     }
@@ -82,53 +76,12 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   return orderedCombos;
 };
 
-const setup = (ctx: Ctx) => {
+const setup = (ctx: Ctx, setupData: any) => {
   let gameCombinations: Array<CombinationWithBid> = [];
   const remainingCombos: { [key: string]: Array<Mat> } = {};
-  for (const faction of factions_base) {
+  for (const faction of setupData.factions) {
     remainingCombos[faction] = [
-      ...mats_base.filter((mat) => !checkBannedCombos(faction as Faction, mat)),
-    ];
-  }
-  for (let i = 0; i < ctx.numPlayers; i++) {
-    const remainingFactions = Object.keys(remainingCombos);
-    const pickedFaction =
-      remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
-    const remainingPlayerMats = remainingCombos[pickedFaction];
-    const pickedPlayerMat =
-      remainingPlayerMats[
-        Math.floor(Math.random() * remainingPlayerMats.length)
-      ];
-
-    remainingFactions.forEach(
-      (faction) =>
-        (remainingCombos[faction] = remainingCombos[faction].filter(
-          (mat) => mat !== pickedPlayerMat
-        ))
-    );
-    delete remainingCombos[pickedFaction];
-
-    gameCombinations.push({
-      faction: pickedFaction as Faction,
-      mat: pickedPlayerMat as Mat,
-      currentBid: -1,
-      currentHolder: null,
-    });
-  }
-
-  return {
-    combinations: orderCombos(gameCombinations),
-    players: {},
-    endGame: false,
-    gameLogger: ["Auction start!"],
-  };
-};
-const setup_ifa = (ctx: Ctx) => {
-  let gameCombinations: Array<CombinationWithBid> = [];
-  const remainingCombos: { [key: string]: Array<Mat> } = {};
-  for (const faction of factions_ifa) {
-    remainingCombos[faction] = [
-      ...mats_ifa.filter((mat) => !checkBannedCombos(faction as Faction, mat)),
+      ...setupData.mats.filter((mat: Mat) => !checkBannedCombos(faction as Faction, mat)),
     ];
   }
   for (let i = 0; i < ctx.numPlayers; i++) {
@@ -197,7 +150,7 @@ const turn = {
 };
 
 const ScytheBidderGame: GameWithMinMaxPlayers = {
-  name: SCYTHE_BASE,
+  name: SCYTHE_BIDDER,
   setup,
   moves: {
     bid,
@@ -205,20 +158,7 @@ const ScytheBidderGame: GameWithMinMaxPlayers = {
   endIf,
   turn,
   minPlayers: MIN_PLAYERS,
-  maxPlayers: MAX_PLAYERS_BASE,
-};
-
-const ScytheBidderGameIFA: GameWithMinMaxPlayers = {
-  name: SCYTHE_IFA,
-  setup: setup_ifa,
-  moves: {
-    bid,
-  },
-  endIf,
-  turn,
-  minPlayers: MIN_PLAYERS,
-  maxPlayers: MAX_PLAYERS_IFA,
+  maxPlayers: MAX_PLAYERS,
 };
 
 export default ScytheBidderGame;
-export {ScytheBidderGameIFA};

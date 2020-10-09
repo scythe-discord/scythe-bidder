@@ -4,7 +4,8 @@ import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, Card, notification, Select, Form } from "antd";
 import client from "./client";
-import { MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA } from "./constants";
+import { MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, SCYTHE_BIDDER } from "./constants";
+import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
@@ -14,6 +15,19 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
     const newGameType = String(gameType);
+    let setupData = null;
+    if (newGameType === SCYTHE_BASE) {
+      setupData = {
+        gameType  : newGameType,
+        factions  : FACTIONS_BASE,
+        mats      : MATS_BASE};
+    } else {
+      setupData = {
+        gameType  : newGameType,
+        factions  : FACTIONS_IFA,
+        mats      : MATS_IFA};
+    }
+    // this if check should be unnecessary
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
@@ -23,9 +37,9 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       return;
     }
     try {
-      await client.createMatch(newGameType, {
+      await client.createMatch(SCYTHE_BIDDER, {
         numPlayers: numPlayersNum,
-        mygameType: newGameType,
+        setupData: setupData,
       });
       onCreate();
     } catch (e) {

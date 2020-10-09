@@ -18,7 +18,7 @@ export const factions = [
   "Rusviet",
 ] as const;
 
-export const mats_base = [
+export const MATS_BASE = [
   "Industrial",
   "Engineering",
   "Patriotic",
@@ -26,7 +26,7 @@ export const mats_base = [
   "Agricultural",
 ] as const;
 
-export const factions_base = [
+export const FACTIONS_BASE = [
   "Crimea",
   "Saxony",
   "Polania",
@@ -34,7 +34,7 @@ export const factions_base = [
   "Rusviet",
 ] as const;
 
-export const mats_ifa = [
+export const MATS_IFA = [
   "Industrial",
   "Engineering",
   "Militant",
@@ -44,7 +44,7 @@ export const mats_ifa = [
   "Agricultural",
 ] as const;
 
-export const factions_ifa = [
+export const FACTIONS_IFA = [
   "Togawa",
   "Crimea",
   "Saxony",
