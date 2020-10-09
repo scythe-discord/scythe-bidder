@@ -5,10 +5,16 @@ import { jsx } from "@emotion/core";
 import TurnOrder from "./turnorder";
 import BidArea from "./bidarea";
 import GameLog from "./gamelog";
-import { CombinationWithBid, GameState, MatchInfo, Player } from "./types";
+import {
+  CombinationWithBid,
+  Faction,
+  GameState,
+  MatchInfo,
+  Player,
+} from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, notification, Row } from "antd";
 import client from "./client";
 import {
   CREDENTIALS,
@@ -20,6 +26,14 @@ import Lockr from "lockr";
 import { useHistory } from "react-router-dom";
 import { cleanupAfterLogout } from "./utils";
 import { mq } from "./breakpoints";
+
+const factionToEmoji = (f: Faction) => {
+  let str: String = f;
+  if (f === "Crimea") {
+    str = "Crimean";
+  }
+  return `:${str}:`;
+};
 
 const BiddingBoard = (props: {
   G: GameState;
@@ -73,12 +87,65 @@ const BiddingBoard = (props: {
     history.push("/");
   }, [matchInfo, playerID, credentials, history, playerName]);
 
+  const linkTextareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const onCopyResult = async () => {
+    const content = ctx.gameover
+      .map(
+        (c: CombinationWithBid, key: number) =>
+          `${factionToEmoji(c.faction)} **${c.faction} ${c.mat}**: $${
+            c.currentBid
+          } to ${c.currentHolder?.name}`
+      )
+      .join("\n");
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(content);
+      } else {
+        if (!linkTextareaRef.current) {
+          return;
+        }
+        linkTextareaRef.current.value = content;
+        linkTextareaRef.current.focus();
+        // https://stackoverflow.com/questions/32851485/make-clipboard-copy-paste-work-on-iphone-devices
+        if (navigator.userAgent.match(/ipad|iphone/i)) {
+          const range = document.createRange();
+          range.selectNodeContents(linkTextareaRef.current);
+          const selection = window.getSelection();
+          if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+          linkTextareaRef.current.setSelectionRange(0, 999999);
+        }
+        linkTextareaRef.current.select();
+        document.execCommand("copy");
+      }
+      notification.success({
+        message: "Success",
+        description: "Bid results copied to clipboard.",
+      });
+    } catch (e) {
+      notification.error({
+        message: "Error",
+        description: "Sorry, an error occurred.",
+      });
+    }
+  };
+
   if (!gameMetadata) {
     return null;
   }
 
   return (
     <React.Fragment>
+      <textarea
+        css={{ display: "none" }}
+        id="clipboard-link"
+        ref={linkTextareaRef}
+        contentEditable
+        suppressContentEditableWarning
+      />
       <Row gutter={24}>
         <Col xs={24} lg={7}>
           <TurnOrder
@@ -100,7 +167,22 @@ const BiddingBoard = (props: {
         </Col>
         <Col xs={24} lg={17} css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}>
           {ctx.gameover ? (
-            <Card title="Auction ended!">
+            <Card
+              title={
+                <div
+                  css={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>Auction ended!</div>
+                  <Button type="primary" onClick={onCopyResult}>
+                    Copy to clipboard
+                  </Button>
+                </div>
+              }
+            >
               {ctx.gameover.map((c: CombinationWithBid, key: number) => (
                 <div
                   key={key}

@@ -93,6 +93,7 @@ const BidArea = (props: {
         tbody: { background: "#fff" },
         ".ant-table": { overflow: "auto" },
       }}
+      pagination={false}
     >
       <Table.Column
         css={{ background: "#fff" }}
