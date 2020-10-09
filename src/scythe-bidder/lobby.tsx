@@ -16,7 +16,7 @@ import {
 } from "antd";
 import CreateRoom from "./create-room";
 import client from "./client";
-import { SCYTHE_BIDDER } from "./constants";
+import { SCYTHE_BASE, SCYTHE_BIDDER, SCYTHE_IFA } from "./constants";
 import Lockr from "lockr";
 import { MatchInfo, Player } from "./types";
 import Animate from "rc-animate";
@@ -42,9 +42,10 @@ export default function Lobby() {
   );
 
   const fetchMatches = React.useCallback(async () => {
-    const result = await client.listMatches(SCYTHE_BIDDER);
+    const result1 = await client.listMatches(SCYTHE_BASE);
+    const result2 = await client.listMatches(SCYTHE_IFA);
     setLoading(false);
-    setMatches(result.matches);
+    setMatches(result1.matches.concat(result2.matches));
   }, []);
 
   const onJoin = React.useCallback(
@@ -238,6 +239,27 @@ export default function Lobby() {
               }}
             />
             {/* <Table.Column width={60} title="IFA" render={() => null} /> */}
+            <Table.Column
+              width={60}
+              title="Type"
+              render={(match: LobbyAPI.Match) => {
+                let content = null;
+                if (match.gameName === SCYTHE_BASE) {
+                  content = (
+                    <em css={{ color: "rgba(0, 0, 0, 0.75)" }}>
+                      BASE
+                    </em>
+                  );
+                } else {
+                  content = (
+                    <em css={{ color: "rgba(0, 0, 0, 0.75)" }}>
+                      IFA
+                    </em>
+                  );
+                }
+                return {children: content}
+              }}
+            />
             <Table.Column
               width={180}
               dataIndex="matchID"
