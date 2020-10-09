@@ -4,11 +4,12 @@ import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, Card, notification, Select, Form } from "antd";
 import client from "./client";
-import { MAX_PLAYERS, MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA } from "./constants";
+import { MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [gameType, setGameType] = React.useState<string>(SCYTHE_BASE);
+  const [maxPlayers, setMaxPlayers] = React.useState(MAX_PLAYERS_BASE);
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
@@ -54,7 +55,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 placeholder="# of players"
                 style={{ width: 100 }}
               >
-                {Array(MAX_PLAYERS + 1 - MIN_PLAYERS)
+                {Array(maxPlayers + 1 - MIN_PLAYERS)
                   .fill(null)
                   .map((_, idx) => (
                     <Select.Option value={MIN_PLAYERS + idx} key={idx}>
@@ -68,6 +69,18 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 value={gameType}
                 onChange={(value) => {
                   setGameType(value);
+                  if (value === SCYTHE_BASE){
+                    if (numPlayers > MAX_PLAYERS_BASE){
+                      setNumPlayers(MAX_PLAYERS_BASE);
+                      notification["warning"]({
+                        message: 'Notification',
+                        description: 'Max players changed',
+                      });
+                    }
+                    setMaxPlayers(MAX_PLAYERS_BASE);
+                  } else {
+                    setMaxPlayers(MAX_PLAYERS_IFA);
+                  }
                 }}
                 placeholder="Base or IFA"
                 style={{ width: 100 }}
