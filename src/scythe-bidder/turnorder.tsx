@@ -1,5 +1,6 @@
 /** @jsx jsx */
 
+import React from "react";
 import { jsx } from "@emotion/core";
 import { List } from "antd";
 import { Ctx } from "boardgame.io";
@@ -13,6 +14,24 @@ interface Props {
 }
 
 const TurnOrder = (props: Props) => {
+  React.useEffect(() => {
+    if (props.isActive) {
+      const turnNotif = new Notification("Scythe Bidder", {
+        body: "It's your turn!",
+      });
+
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") {
+          turnNotif.close();
+        }
+      });
+
+      turnNotif.addEventListener("click", () => {
+        window.focus();
+      });
+    }
+  }, [props.isActive]);
+
   return (
     <List
       header={
@@ -31,9 +50,14 @@ const TurnOrder = (props: Props) => {
         <List.Item
           css={{
             padding: "12px 24px",
-            fontWeight: props.ctx.currentPlayer === playerId ? 500 : 400,
+            fontWeight:
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
+                ? 500
+                : 400,
             background:
-              props.ctx.currentPlayer === playerId ? "#e6f7ff" : "#fff",
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
+                ? "#e6f7ff"
+                : "#fff",
           }}
         >
           {idx + 1}. {props.players[parseInt(playerId)].name}

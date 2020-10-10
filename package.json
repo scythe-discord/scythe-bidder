@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@emotion/core": "^10.0.35",
     "@types/express": "^4.17.8",
     "@types/koa-static": "^4.0.1",
