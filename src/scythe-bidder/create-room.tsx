@@ -59,46 +59,54 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     >
       <div>
         <div css={{ display: "flex" }}>
-          <Form name="create-room" layout="inline">
-            <Form.Item>
-              <Select<number>
-                value={numPlayers}
-                onChange={(value) => {
-                  setNumPlayers(value);
-                }}
-                placeholder="# of players"
-                style={{ width: 100 }}
-              >
-                {Array(maxPlayers + 1 - MIN_PLAYERS)
-                  .fill(null)
-                  .map((_, idx) => (
-                    <Select.Option value={MIN_PLAYERS + idx} key={idx}>
-                      {MIN_PLAYERS + idx} players
-                    </Select.Option>
-                  ))}
-              </Select>
-            </Form.Item>
-            <Form.Item>
-              <Switch
-                defaultChecked
-                checkedChildren="IFA"
-                unCheckedChildren="IFA"
-                onChange={(value) => {
-                  setIsIfaActive(value);
-                  if (!value) {
-                    if (numPlayers > MAX_PLAYERS_BASE) {
-                      setNumPlayers(MAX_PLAYERS_BASE);
-                      notification.warning({
-                        message: "Warning",
-                        description: `The Scythe base game allows only 
+          <Form name="create-room" layout="horizontal">
+            <Form.Item
+              css={{
+                ".ant-form-item-control-input-content": { display: "flex" },
+                marginBottom: 0,
+              }}
+            >
+              <Form.Item css={{ marginLeft: 6 }}>
+                <Switch
+                  defaultChecked
+                  checkedChildren="IFA"
+                  unCheckedChildren="IFA"
+                  style={{ transform: "scale(1.2,1.2)" }}
+                  onChange={(value) => {
+                    setIsIfaActive(value);
+                    if (!value) {
+                      if (numPlayers > MAX_PLAYERS_BASE) {
+                        setNumPlayers(MAX_PLAYERS_BASE);
+                        notification.warning({
+                          message: "Warning",
+                          description: `The Scythe base game allows only 
                                       up to ${MAX_PLAYERS_BASE} players.`,
-                      });
+                        });
+                      }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              </Form.Item>
+              <Form.Item css={{ marginLeft: 32 }}>
+                <Select<number>
+                  value={numPlayers}
+                  onChange={(value) => {
+                    setNumPlayers(value);
+                  }}
+                  placeholder="# of players"
+                  style={{ width: 100 }}
+                >
+                  {Array(maxPlayers + 1 - MIN_PLAYERS)
+                    .fill(null)
+                    .map((_, idx) => (
+                      <Select.Option value={MIN_PLAYERS + idx} key={idx}>
+                        {MIN_PLAYERS + idx} players
+                      </Select.Option>
+                    ))}
+                </Select>
+              </Form.Item>
             </Form.Item>
-            <Form.Item>
+            <Form.Item css={{ marginBottom: 0, marginLeft: 1 }}>
               <Button onClick={onClick} type="primary" htmlType="submit">
                 Create
               </Button>
