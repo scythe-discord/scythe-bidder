@@ -6,26 +6,23 @@ import { Button, Card, Form, notification, Select, Switch } from "antd";
 import client from "./client";
 import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
-import { SCYTHE_BASE, SCYTHE_BIDDER, SCYTHE_IFA } from "./constants";
+import { SCYTHE_BIDDER } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [ifa, setIfa] = React.useState<boolean>(false);
-  const maxPlayers = ifa === SCYTHE_BASE ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
+  const [isIfaActive, setIsIfaActive] = React.useState<boolean>(false);
+  const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
-    const newGameType = Boolean(ifa);
     let setupData = null;
-    if (newGameType === SCYTHE_BASE) {
+    if (!isIfaActive) {
       setupData = {
-        gameType: newGameType,
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
       };
     } else {
       setupData = {
-        gameType: newGameType,
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
       };
@@ -34,8 +31,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
-      (newGameType === SCYTHE_BASE && numPlayersNum > MAX_PLAYERS_BASE) ||
-      (newGameType === SCYTHE_IFA && numPlayersNum > MAX_PLAYERS_IFA)
+      (!isIfaActive && numPlayersNum > MAX_PLAYERS_BASE) ||
+      (isIfaActive && numPlayersNum > MAX_PLAYERS_IFA)
     ) {
       return;
     }
@@ -48,7 +45,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, ifa, onCreate]);
+  }, [numPlayers, isIfaActive, onCreate]);
 
   return (
     <Card
@@ -86,8 +83,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 checkedChildren="IFA"
                 unCheckedChildren="IFA"
                 onChange={(value) => {
-                  setIfa(value);
-                  if (value === SCYTHE_BASE) {
+                  setIsIfaActive(value);
+                  if (!value) {
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({

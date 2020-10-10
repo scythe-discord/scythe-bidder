@@ -56,9 +56,6 @@ export const FACTIONS_IFA = [
 
 export const SCYTHE_BIDDER = "scythe-bidder";
 
-export const SCYTHE_BASE = false;
-export const SCYTHE_IFA = true;
-
 export const PLAYER_NAME = "playerName";
 export const CREDENTIALS = "credentials";
 export const CURRENT_MATCH_INFO = "currentMatchInfo";
