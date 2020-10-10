@@ -88,8 +88,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
                         message     : 'Warning',
-                        description : 'Max players changed',
-                        placement   : 'topLeft',
+                        description : `The Scythe base game allows only up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
                   }
