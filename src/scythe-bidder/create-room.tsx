@@ -10,7 +10,7 @@ import { SCYTHE_BIDDER } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [isIfaActive, setIsIfaActive] = React.useState<boolean>(false);
+  const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
   const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const onClick = React.useCallback(async () => {
@@ -80,6 +80,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             </Form.Item>
             <Form.Item>
               <Switch
+                defaultChecked
                 checkedChildren="IFA"
                 unCheckedChildren="IFA"
                 onChange={(value) => {
