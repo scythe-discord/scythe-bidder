@@ -2,19 +2,19 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, notification, Select, Form } from "antd";
+import { Button, Card, Form, notification, Select, Switch } from "antd";
 import client from "./client";
 import { MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, SCYTHE_BIDDER } from "./constants";
 import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [gameType, setGameType] = React.useState<string>(SCYTHE_BASE);
-  const maxPlayers = gameType === SCYTHE_BASE ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
+  const [ifa, setIfa] = React.useState<boolean>(false);
+  const maxPlayers = ifa === SCYTHE_BASE ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
-    const newGameType = String(gameType);
+    const newGameType = Boolean(ifa);
     let setupData = null;
     if (newGameType === SCYTHE_BASE) {
       setupData = {
@@ -45,7 +45,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, gameType, onCreate]);
+  }, [numPlayers, ifa, onCreate]);
 
   return (
     <Card
@@ -79,12 +79,13 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
               </Select>
             </Form.Item>
             <Form.Item>
-              <Select<string>
-                value={gameType}
+              <Switch
+                checkedChildren="IFA"
+                unCheckedChildren="IFA"
                 onChange={(value) => {
-                  setGameType(value);
-                  if (value === SCYTHE_BASE){
-                    if (numPlayers > MAX_PLAYERS_BASE){
+                  setIfa(value);
+                  if (value === SCYTHE_BASE) {
+                    if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
                         message     : 'Warning',
@@ -93,12 +94,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                     }
                   }
                 }}
-                placeholder="Base or IFA"
-                style={{ width: 100 }}
-              >
-                <option value={SCYTHE_BASE}>Base</option>
-                <option value={SCYTHE_IFA}>IFA</option>
-              </Select>
+              />
             </Form.Item>
             <Form.Item>
               <Button onClick={onClick} type="primary" htmlType="submit">
