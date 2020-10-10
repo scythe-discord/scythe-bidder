@@ -4,8 +4,9 @@ import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, Card, Form, notification, Select, Switch } from "antd";
 import client from "./client";
-import { MIN_PLAYERS, SCYTHE_BASE, SCYTHE_IFA, MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, SCYTHE_BIDDER } from "./constants";
 import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
+import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
+import { SCYTHE_BASE, SCYTHE_BIDDER, SCYTHE_IFA } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
@@ -18,14 +19,16 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     let setupData = null;
     if (newGameType === SCYTHE_BASE) {
       setupData = {
-        gameType  : newGameType,
-        factions  : FACTIONS_BASE,
-        mats      : MATS_BASE};
+        gameType: newGameType,
+        factions: FACTIONS_BASE,
+        mats: MATS_BASE,
+      };
     } else {
       setupData = {
-        gameType  : newGameType,
-        factions  : FACTIONS_IFA,
-        mats      : MATS_IFA};
+        gameType: newGameType,
+        factions: FACTIONS_IFA,
+        mats: MATS_IFA,
+      };
     }
     // this if check should be unnecessary
     if (
@@ -88,8 +91,9 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
-                        message     : 'Warning',
-                        description : `The Scythe base game allows only up to ${MAX_PLAYERS_BASE} players.`,
+                        message: "Warning",
+                        description: `The Scythe base game allows only 
+                                      up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
                   }
