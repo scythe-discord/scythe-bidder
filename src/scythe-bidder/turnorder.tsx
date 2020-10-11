@@ -13,24 +13,46 @@ interface Props {
   isActive: boolean;
 }
 
+const addNotifEventListeners = (notif: Notification) => {
+  const onVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      notif.close();
+    }
+  };
+
+  const onClick = () => {
+    window.focus();
+  };
+
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  notif.addEventListener("click", onClick);
+
+  return () => {
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+    notif.removeEventListener("click", onClick);
+  };
+};
+
 const TurnOrder = (props: Props) => {
   React.useEffect(() => {
-    if (props.isActive) {
+    if (props.isActive && document.visibilityState !== "visible") {
       const turnNotif = new Notification("Scythe Bidder", {
         body: "It's your turn!",
       });
 
-      document.addEventListener("visibilitychange", function () {
-        if (document.visibilityState === "visible") {
-          turnNotif.close();
-        }
-      });
-
-      turnNotif.addEventListener("click", () => {
-        window.focus();
-      });
+      return addNotifEventListeners(turnNotif);
     }
   }, [props.isActive]);
+
+  React.useEffect(() => {
+    if (props.ctx.gameover && document.visibilityState !== "visible") {
+      const endGameNotif = new Notification("Scythe Bidder", {
+        body: "Bid ended.",
+      });
+
+      return addNotifEventListeners(endGameNotif);
+    }
+  }, [props.ctx.gameover]);
 
   return (
     <List
