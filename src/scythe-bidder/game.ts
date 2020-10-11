@@ -1,6 +1,11 @@
 import { Ctx } from "boardgame.io";
-import { FACTIONS_IFA as FACTIONS, MATS_IFA as MATS } from "./constants";
-import { MAX_PLAYERS, MIN_PLAYERS, SCYTHE_BIDDER } from "./constants";
+import {
+  FACTIONS_IFA as FACTIONS,
+  MATS_IFA as MATS,
+  MAX_PLAYERS,
+  MIN_PLAYERS,
+  SCYTHE_BIDDER,
+} from "./constants";
 import { bid } from "./moves";
 import {
   CombinationWithBid,
@@ -82,7 +87,9 @@ const setup = (ctx: Ctx, setupData: any) => {
   const remainingCombos: { [key: string]: Array<Mat> } = {};
   for (const faction of setupData.factions) {
     remainingCombos[faction] = [
-      ...setupData.mats.filter((mat: Mat) => !checkBannedCombos(faction as Faction, mat)),
+      ...setupData.mats.filter(
+        (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
+      ),
     ];
   }
   for (let i = 0; i < ctx.numPlayers; i++) {

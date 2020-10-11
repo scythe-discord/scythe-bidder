@@ -32,10 +32,7 @@ const App = () => {
     };
 
     const handlePermission = () => {
-      if (
-        Notification.permission === "denied" ||
-        Notification.permission === "default"
-      ) {
+      if (Notification.permission === "granted") {
         setShowButton(false);
       }
     };
@@ -46,6 +43,7 @@ const App = () => {
       } else {
         if (checkNotificationPromise()) {
           await Notification.requestPermission();
+          handlePermission();
         } else {
           Notification.requestPermission((permission) => {
             handlePermission();

@@ -93,6 +93,7 @@ const BidArea = (props: {
         tbody: { background: "#fff" },
         ".ant-table": { overflow: "auto" },
       }}
+      rowKey={(combo) => `${combo.faction}:${combo.mat}`}
       pagination={false}
     >
       <Table.Column
