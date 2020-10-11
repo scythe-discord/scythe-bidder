@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
-import { factions, mats, MIN_PLAYERS, MAX_PLAYERS, SCYTHE_BIDDER } from "./constants";
+import { FACTIONS_IFA as FACTIONS, MATS_IFA as MATS } from "./constants";
+import { MAX_PLAYERS, MIN_PLAYERS, SCYTHE_BIDDER } from "./constants";
 import { bid } from "./moves";
 import {
   CombinationWithBid,
@@ -10,7 +11,7 @@ import {
 } from "./types";
 
 const matToIdx: { [key: string]: number } = {};
-mats.forEach((mat, idx) => {
+MATS.forEach((mat, idx) => {
   matToIdx[mat] = idx;
 });
 
@@ -55,7 +56,7 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   }
 
   // Find the index of the faction that will go first
-  const startingIdx = factions.findIndex(
+  const startingIdx = FACTIONS.findIndex(
     (faction) => faction === firstCombo.faction
   );
 
@@ -67,8 +68,8 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   // Iterate through factions starting with the one that goes first,
   // adding any combinations that are in play to the result
   const orderedCombos = [];
-  for (let i = 0; i < factions.length; i++) {
-    const currentFaction = factions[(startingIdx + i) % factions.length];
+  for (let i = 0; i < FACTIONS.length; i++) {
+    const currentFaction = FACTIONS[(startingIdx + i) % FACTIONS.length];
     if (combosByFaction[currentFaction]) {
       orderedCombos.push(combosByFaction[currentFaction]);
     }
