@@ -1,8 +1,8 @@
 import { Game } from "boardgame.io";
-import { factions, mats } from "./constants";
+import { FACTIONS_IFA as FACTIONS, MATS_IFA as MATS } from "./constants";
 
-export type Mat = typeof mats[number];
-export type Faction = typeof factions[number];
+export type Mat = typeof MATS[number];
+export type Faction = typeof FACTIONS[number];
 
 export type Player = {
   id: any;

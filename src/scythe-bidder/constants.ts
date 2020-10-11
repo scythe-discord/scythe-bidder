@@ -1,4 +1,20 @@
-export const mats = [
+export const MATS_BASE = [
+  "Industrial",
+  "Engineering",
+  "Patriotic",
+  "Mechanical",
+  "Agricultural",
+] as const;
+
+export const FACTIONS_BASE = [
+  "Crimea",
+  "Saxony",
+  "Polania",
+  "Nordic",
+  "Rusviet",
+] as const;
+
+export const MATS_IFA = [
   "Industrial",
   "Engineering",
   "Militant",
@@ -8,7 +24,7 @@ export const mats = [
   "Agricultural",
 ] as const;
 
-export const factions = [
+export const FACTIONS_IFA = [
   "Togawa",
   "Crimea",
   "Saxony",
@@ -26,3 +42,6 @@ export const CURRENT_MATCH_INFO = "currentMatchInfo";
 
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 7;
+
+export const MAX_PLAYERS_BASE = 5;
+export const MAX_PLAYERS_IFA = 7;

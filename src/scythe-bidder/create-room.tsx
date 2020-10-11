@@ -2,31 +2,50 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, notification, Select, Form } from "antd";
+import { Button, Card, Form, notification, Select, Switch } from "antd";
 import client from "./client";
-import { MAX_PLAYERS, MIN_PLAYERS, SCYTHE_BIDDER } from "./constants";
+import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
+import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
+import { SCYTHE_BIDDER } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
+  const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
+  const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
+    let setupData = null;
+    if (!isIfaActive) {
+      setupData = {
+        factions: FACTIONS_BASE,
+        mats: MATS_BASE,
+      };
+    } else {
+      setupData = {
+        factions: FACTIONS_IFA,
+        mats: MATS_IFA,
+      };
+    }
+    // this if check should be unnecessary
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
-      numPlayersNum > MAX_PLAYERS
+      (!isIfaActive && numPlayersNum > MAX_PLAYERS_BASE) ||
+      (isIfaActive && numPlayersNum > MAX_PLAYERS_IFA)
     ) {
       return;
     }
     try {
       await client.createMatch(SCYTHE_BIDDER, {
         numPlayers: numPlayersNum,
+        setupData: setupData,
       });
       onCreate();
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, onCreate]);
+  }, [numPlayers, isIfaActive, onCreate]);
 
   return (
     <Card
@@ -40,26 +59,54 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     >
       <div>
         <div css={{ display: "flex" }}>
-          <Form name="create-room" layout="inline">
-            <Form.Item>
+          <Form
+            name="create-room"
+            colon={false}
+            labelAlign="left"
+            labelCol={{ span: 16 }}
+            wrapperCol={{ offset: 4, span: 4 }}
+          >
+            {/* margin is required for tighter spacing */}
+            <Form.Item label="IFA enabled" css={{ marginBottom: 0 }}>
+              <Switch
+                defaultChecked
+                onChange={(value) => {
+                  setIsIfaActive(value);
+                  if (!value) {
+                    if (numPlayers > MAX_PLAYERS_BASE) {
+                      setNumPlayers(MAX_PLAYERS_BASE);
+                      notification.warning({
+                        message: "Warning",
+                        description: `The Scythe base game allows only 
+                                      up to ${MAX_PLAYERS_BASE} players.`,
+                      });
+                    }
+                  }
+                }}
+              />
+            </Form.Item>
+            {/* margin is required for tighter spacing */}
+            <Form.Item label="Number of players" css={{ marginBottom: 0 }}>
               <Select<number>
                 value={numPlayers}
                 onChange={(value) => {
                   setNumPlayers(value);
                 }}
                 placeholder="# of players"
-                style={{ width: 100 }}
+                style={{ width: 50 }}
               >
-                {Array(MAX_PLAYERS + 1 - MIN_PLAYERS)
+                {Array(maxPlayers + 1 - MIN_PLAYERS)
                   .fill(null)
                   .map((_, idx) => (
                     <Select.Option value={MIN_PLAYERS + idx} key={idx}>
-                      {MIN_PLAYERS + idx} players
+                      {MIN_PLAYERS + idx}
                     </Select.Option>
                   ))}
               </Select>
             </Form.Item>
-            <Form.Item>
+            <br />
+            {/* name and wrapperCol required for proper alignment */}
+            <Form.Item name="Create" wrapperCol={{ offset: -4, span: 4 }}>
               <Button onClick={onClick} type="primary" htmlType="submit">
                 Create
               </Button>
