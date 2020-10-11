@@ -59,54 +59,54 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     >
       <div>
         <div css={{ display: "flex" }}>
-          <Form name="create-room" layout="horizontal">
-            <Form.Item
-              css={{
-                ".ant-form-item-control-input-content": { display: "flex" },
-                marginBottom: 0,
-              }}
-            >
-              <Form.Item css={{ marginLeft: 6 }}>
-                <Switch
-                  defaultChecked
-                  checkedChildren="IFA"
-                  unCheckedChildren="IFA"
-                  style={{ transform: "scale(1.2,1.2)" }}
-                  onChange={(value) => {
-                    setIsIfaActive(value);
-                    if (!value) {
-                      if (numPlayers > MAX_PLAYERS_BASE) {
-                        setNumPlayers(MAX_PLAYERS_BASE);
-                        notification.warning({
-                          message: "Warning",
-                          description: `The Scythe base game allows only 
+          <Form
+            name="create-room"
+            colon={false}
+            labelAlign="left"
+            labelCol={{ span: 16 }}
+            wrapperCol={{ offset: 4, span: 4 }}
+          >
+            {/* margin is required for tighter spacing */}
+            <Form.Item label="IFA enabled" css={{ marginBottom: 0 }}>
+              <Switch
+                defaultChecked
+                onChange={(value) => {
+                  setIsIfaActive(value);
+                  if (!value) {
+                    if (numPlayers > MAX_PLAYERS_BASE) {
+                      setNumPlayers(MAX_PLAYERS_BASE);
+                      notification.warning({
+                        message: "Warning",
+                        description: `The Scythe base game allows only 
                                       up to ${MAX_PLAYERS_BASE} players.`,
-                        });
-                      }
+                      });
                     }
-                  }}
-                />
-              </Form.Item>
-              <Form.Item css={{ marginLeft: 32 }}>
-                <Select<number>
-                  value={numPlayers}
-                  onChange={(value) => {
-                    setNumPlayers(value);
-                  }}
-                  placeholder="# of players"
-                  style={{ width: 100 }}
-                >
-                  {Array(maxPlayers + 1 - MIN_PLAYERS)
-                    .fill(null)
-                    .map((_, idx) => (
-                      <Select.Option value={MIN_PLAYERS + idx} key={idx}>
-                        {MIN_PLAYERS + idx} players
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
+                  }
+                }}
+              />
             </Form.Item>
-            <Form.Item css={{ marginBottom: 0, marginLeft: 1 }}>
+            {/* margin is required for tighter spacing */}
+            <Form.Item label="Number of players" css={{ marginBottom: 0 }}>
+              <Select<number>
+                value={numPlayers}
+                onChange={(value) => {
+                  setNumPlayers(value);
+                }}
+                placeholder="# of players"
+                style={{ width: 50 }}
+              >
+                {Array(maxPlayers + 1 - MIN_PLAYERS)
+                  .fill(null)
+                  .map((_, idx) => (
+                    <Select.Option value={MIN_PLAYERS + idx} key={idx}>
+                      {MIN_PLAYERS + idx}
+                    </Select.Option>
+                  ))}
+              </Select>
+            </Form.Item>
+            <br />
+            {/* name and wrapperCol required for proper alignment */}
+            <Form.Item name="Create" wrapperCol={{ offset: -4, span: 4 }}>
               <Button onClick={onClick} type="primary" htmlType="submit">
                 Create
               </Button>
