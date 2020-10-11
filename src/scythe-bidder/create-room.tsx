@@ -106,7 +106,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             </Form.Item>
             <br />
             {/* name and wrapperCol required for proper alignment */}
-            <Form.Item name="Create" wrapperCol={{ offset: -4, span: 4 }}>
+            <Form.Item
+              name="Create"
+              wrapperCol={{ offset: -4, span: 4 }}
+              css={{ marginBottom: 0 }}
+            >
               <Button onClick={onClick} type="primary" htmlType="submit">
                 Create
               </Button>
