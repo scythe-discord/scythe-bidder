@@ -35,7 +35,7 @@ const addNotifEventListeners = (notif: Notification) => {
 
 const TurnOrder = (props: Props) => {
   React.useEffect(() => {
-    if (props.isActive && document.visibilityState !== "visible") {
+    if (props.isActive) {
       const turnNotif = new Notification("Scythe Bidder", {
         body: "It's your turn!",
       });
@@ -45,7 +45,7 @@ const TurnOrder = (props: Props) => {
   }, [props.isActive]);
 
   React.useEffect(() => {
-    if (props.ctx.gameover && document.visibilityState !== "visible") {
+    if (props.ctx.gameover) {
       const endGameNotif = new Notification("Scythe Bidder", {
         body: "Bid ended.",
       });
