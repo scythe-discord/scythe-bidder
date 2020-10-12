@@ -1,5 +1,6 @@
 /** @jsx jsx */
 
+import React from "react";
 import { jsx } from "@emotion/core";
 import { List } from "antd";
 import { Ctx } from "boardgame.io";
@@ -12,7 +13,47 @@ interface Props {
   isActive: boolean;
 }
 
+const addNotifEventListeners = (notif: Notification) => {
+  const onVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      notif.close();
+    }
+  };
+
+  const onClick = () => {
+    window.focus();
+  };
+
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  notif.addEventListener("click", onClick);
+
+  return () => {
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+    notif.removeEventListener("click", onClick);
+  };
+};
+
 const TurnOrder = (props: Props) => {
+  React.useEffect(() => {
+    if (props.isActive) {
+      const turnNotif = new Notification("Scythe Bidder", {
+        body: "It's your turn!",
+      });
+
+      return addNotifEventListeners(turnNotif);
+    }
+  }, [props.isActive]);
+
+  React.useEffect(() => {
+    if (props.ctx.gameover) {
+      const endGameNotif = new Notification("Scythe Bidder", {
+        body: "Bid ended.",
+      });
+
+      return addNotifEventListeners(endGameNotif);
+    }
+  }, [props.ctx.gameover]);
+
   return (
     <List
       header={
@@ -31,9 +72,14 @@ const TurnOrder = (props: Props) => {
         <List.Item
           css={{
             padding: "12px 24px",
-            fontWeight: props.ctx.currentPlayer === playerId ? 500 : 400,
+            fontWeight:
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
+                ? 500
+                : 400,
             background:
-              props.ctx.currentPlayer === playerId ? "#e6f7ff" : "#fff",
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
+                ? "#e6f7ff"
+                : "#fff",
           }}
         >
           {idx + 1}. {props.players[parseInt(playerId)].name}
