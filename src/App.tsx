@@ -8,17 +8,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
 import "antd/dist/antd.css";
 import { Button, Layout, Tooltip } from "antd";
-import { BellFilled } from "@ant-design/icons";
+import { BellOutlined, BellFilled } from "@ant-design/icons";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BidRoom from "./scythe-bidder/bid-room";
 import { config } from "dotenv";
 import { mq } from "./scythe-bidder/breakpoints";
+import Lockr from "lockr";
+import { NOTIFICATION_ENABLED } from "./scythe-bidder/constants";
 
 config();
 
 const App = () => {
-  const [showButton, setShowButton] = React.useState(
-    !!window.Notification && Notification.permission !== "granted"
+  const setting =
+    Lockr.get<string | undefined>(NOTIFICATION_ENABLED) === "true";
+  const [isNotificationEnabled, setIsNotificationEnabled] = React.useState(
+    setting
   );
 
   const onRequestNotification = React.useCallback(() => {
@@ -31,29 +35,33 @@ const App = () => {
       return true;
     };
 
-    const handlePermission = () => {
-      if (Notification.permission === "granted") {
-        setShowButton(false);
-      }
-    };
-
     const requestPermission = async () => {
       if (!("Notification" in window)) {
         console.log("This browser does not support notifications.");
       } else {
         if (checkNotificationPromise()) {
           await Notification.requestPermission();
-          handlePermission();
         } else {
-          Notification.requestPermission((permission) => {
-            handlePermission();
-          });
+          Notification.requestPermission(() => {});
         }
       }
     };
 
     requestPermission();
   }, []);
+
+  const onToggleNotification = React.useCallback(() => {
+    if (Notification.permission !== "granted") {
+      onRequestNotification();
+    }
+
+    setIsNotificationEnabled((prev) => !prev);
+  }, [onRequestNotification]);
+
+  React.useEffect(() => {
+    Lockr.set(NOTIFICATION_ENABLED, String(isNotificationEnabled));
+  }, [isNotificationEnabled]);
+
   return (
     <Layout>
       <Layout.Header
@@ -99,13 +107,20 @@ const App = () => {
               <LobbyView />
             </Route>
             <Route path="/game/:matchId">
-              <BidRoom />
+              <BidRoom isNotificationEnabled={isNotificationEnabled} />
             </Route>
           </Switch>
         </BrowserRouter>
-        {showButton &&
+        {!!window.Notification &&
           ReactDOM.createPortal(
-            <Tooltip title="Notify me when it's my turn" placement="topLeft">
+            <Tooltip
+              title={
+                isNotificationEnabled
+                  ? "Stop sending me notifications"
+                  : "Notify me when it's my turn"
+              }
+              placement="topLeft"
+            >
               <Button
                 css={{
                   position: "fixed",
@@ -115,9 +130,9 @@ const App = () => {
                   alignItems: "center",
                   justifyContent: "center",
                 }}
-                onClick={onRequestNotification}
+                onClick={onToggleNotification}
                 shape="circle"
-                icon={<BellFilled />}
+                icon={isNotificationEnabled ? <BellFilled /> : <BellOutlined />}
               />
             </Tooltip>,
             document.body
