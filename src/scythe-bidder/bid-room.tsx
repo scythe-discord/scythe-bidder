@@ -23,7 +23,11 @@ type GameState = {
   ctx: Ctx;
 };
 
-export default function BidRoom() {
+interface Props {
+  isNotificationEnabled?: boolean;
+}
+
+export default function BidRoom({ isNotificationEnabled }: Props) {
   const { matchId } = useParams<{ matchId: string }>();
   const [gameState, setGameState] = React.useState<GameState | undefined>();
   const gameClientRef = React.useRef<_ClientImpl>();
@@ -82,6 +86,7 @@ export default function BidRoom() {
       playerID={gameClientRef.current.playerID}
       gameMetadata={gameClientRef.current.matchData}
       matchId={matchId}
+      isNotificationEnabled={isNotificationEnabled}
     />
   ) : (
     <Spin css={{ display: "block", margin: 200 }} />
