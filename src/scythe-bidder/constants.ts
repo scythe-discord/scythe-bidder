@@ -34,6 +34,16 @@ export const FACTIONS_IFA = [
   "Rusviet",
 ] as const;
 
+export const MAT_IMAGES = {
+  Innovative: "/Innovative.png",
+  Militant: "/Militant.png",
+  Patriotic: "/Patriotic.png",
+  Industrial: "/Industrial.png",
+  Agricultural: "/Agricultural.png",
+  Engineering: "/Engineering.png",
+  Mechanical: "/Mechanical.png",
+};
+
 export const SCYTHE_BIDDER = "scythe-bidder";
 
 export const PLAYER_NAME = "playerName";

@@ -3,26 +3,10 @@
 import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, InputNumber, notification, Table } from "antd";
+import { MAT_IMAGES } from "./constants";
 import { Faction, GameState, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
-
-const matImages = {
-  Innovative:
-    "https://cf.geekdo-images.com/original/img/VD0zB_uzIIi5kaGYd6HNHjM2oTA=/0x0/pic3333416.png",
-  Militant:
-    "https://cf.geekdo-images.com/original/img/6aSVG7qvEM6NtXL0xJhgva8KxmA=/0x0/pic3333417.png",
-  Patriotic:
-    "https://cf.geekdo-images.com/original/img/nyNtLvT0rC_qrboC_A3rFoYMu6U=/0x0/pic2695350.jpg",
-  Industrial:
-    "https://cdn.arstechnica.net/wp-content/uploads/2016/07/ScythePlayermat.png",
-  Agricultural:
-    "https://cf.geekdo-images.com/camo/9fe9795cf6647df8b0db3be6f103bb5ea45348e8/68747470733a2f2f692e696d6775722e636f6d2f45434b73656b552e706e67",
-  Engineering:
-    "https://cf.geekdo-images.com/camo/faebc55a71303fbe0836ff9a0bf3bae001d5371f/68747470733a2f2f692e696d6775722e636f6d2f386478327964622e706e67",
-  Mechanical:
-    "https://steamuserimages-a.akamaihd.net/ugc/968727454197258419/AC405A3EB987C0F804E6D439C7B738E5F3546272/",
-};
 
 const BidArea = (props: {
   G: GameState;
@@ -158,7 +142,11 @@ const BidArea = (props: {
         dataIndex="mat"
         render={(mat: Mat) => {
           return (
-            <a href={matImages[mat]} target="_blank" rel="noopener noreferrer">
+            <a
+              href={process.env.PUBLIC_URL + MAT_IMAGES[mat]}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {mat}
             </a>
           );
