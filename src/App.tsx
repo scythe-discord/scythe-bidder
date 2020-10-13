@@ -51,12 +51,12 @@ const App = () => {
   }, []);
 
   const onToggleNotification = React.useCallback(() => {
-    if (Notification.permission !== "granted") {
+    if (Notification.permission !== "granted" && !isNotificationEnabled) {
       onRequestNotification();
     }
 
     setIsNotificationEnabled((prev) => !prev);
-  }, [onRequestNotification]);
+  }, [isNotificationEnabled, onRequestNotification]);
 
   React.useEffect(() => {
     Lockr.set(NOTIFICATION_ENABLED, String(isNotificationEnabled));
@@ -115,25 +115,32 @@ const App = () => {
           ReactDOM.createPortal(
             <Tooltip
               title={
-                isNotificationEnabled
+                Notification.permission === "denied"
+                  ? "Scythe Bidder is not authorized to send notifications"
+                  : isNotificationEnabled
                   ? "Stop sending me notifications"
                   : "Notify me when it's my turn"
               }
               placement="topLeft"
             >
-              <Button
-                css={{
-                  position: "fixed",
-                  bottom: 40,
-                  right: 40,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onClick={onToggleNotification}
-                shape="circle"
-                icon={isNotificationEnabled ? <BellFilled /> : <BellOutlined />}
-              />
+              <div css={{ position: "fixed", bottom: 40, right: 40 }}>
+                <Button
+                  css={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    // workaround from https://github.com/ant-design/ant-design/issues/9581#issuecomment-599668648
+                    pointerEvents:
+                      Notification.permission === "denied" ? "none" : "auto",
+                  }}
+                  onClick={onToggleNotification}
+                  shape="circle"
+                  icon={
+                    isNotificationEnabled ? <BellFilled /> : <BellOutlined />
+                  }
+                  disabled={Notification.permission === "denied"}
+                />
+              </div>
             </Tooltip>,
             document.body
           )}
