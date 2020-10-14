@@ -3,7 +3,6 @@
 import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, InputNumber, notification, Table } from "antd";
-import { MAT_IMAGES } from "./constants";
 import { Faction, GameState, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
@@ -142,7 +141,11 @@ const BidArea = (props: {
         dataIndex="mat"
         render={(mat: Mat) => {
           return (
-            <a href={MAT_IMAGES[mat]} target="_blank" rel="noopener noreferrer">
+            <a
+              href={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {mat}
             </a>
           );

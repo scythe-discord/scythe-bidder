@@ -45,9 +45,3 @@ export const MAX_PLAYERS = 7;
 
 export const MAX_PLAYERS_BASE = 5;
 export const MAX_PLAYERS_IFA = 7;
-
-const MAT_IMAGES:  { [key: string]: string } = {};
-MATS_IFA.forEach((mat,idx) => {
-  MAT_IMAGES[mat] = process.env.PUBLIC_URL + "/" + mat + ".png";
-})
-export {MAT_IMAGES};
