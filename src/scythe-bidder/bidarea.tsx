@@ -143,7 +143,7 @@ const BidArea = (props: {
         render={(mat: Mat) => {
           return (
             <a
-              href={process.env.PUBLIC_URL + MAT_IMAGES[mat]}
+              href={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
               target="_blank"
               rel="noopener noreferrer"
             >
