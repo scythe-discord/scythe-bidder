@@ -9,6 +9,9 @@ const bid = (
   bidValue: number,
   player: Player
 ) => {
+  if (!Number.isInteger(bidValue)) {
+    throw new Error("Received a non-integer bid.");
+  }
   const newCombination = {
     currentHolder: { ...player },
     faction,
