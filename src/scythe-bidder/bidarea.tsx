@@ -123,6 +123,7 @@ const BidArea = (props: {
                   }
                   setBids({ ...bids, [`${combo.faction}:${combo.mat}`]: e });
                 }}
+                type="number"
               ></InputNumber>
               <Button
                 css={{ marginLeft: 12 }}
