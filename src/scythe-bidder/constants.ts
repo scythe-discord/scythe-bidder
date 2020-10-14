@@ -34,16 +34,6 @@ export const FACTIONS_IFA = [
   "Rusviet",
 ] as const;
 
-export const MAT_IMAGES = {
-  Innovative: "/Innovative.png",
-  Militant: "/Militant.png",
-  Patriotic: "/Patriotic.png",
-  Industrial: "/Industrial.png",
-  Agricultural: "/Agricultural.png",
-  Engineering: "/Engineering.png",
-  Mechanical: "/Mechanical.png",
-};
-
 export const SCYTHE_BIDDER = "scythe-bidder";
 
 export const PLAYER_NAME = "playerName";
@@ -55,3 +45,9 @@ export const MAX_PLAYERS = 7;
 
 export const MAX_PLAYERS_BASE = 5;
 export const MAX_PLAYERS_IFA = 7;
+
+const MAT_IMAGES:  { [key: string]: string } = {};
+MATS_IFA.forEach((mat,idx) => {
+  MAT_IMAGES[mat] = process.env.PUBLIC_URL + "/" + mat + ".png";
+})
+export {MAT_IMAGES};
