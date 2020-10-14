@@ -11,7 +11,6 @@ interface Props {
   players: Array<Player>;
   playerID: string | null;
   isActive: boolean;
-  isNotificationEnabled?: boolean;
 }
 
 const addNotifEventListeners = (notif: Notification) => {
@@ -36,33 +35,31 @@ const addNotifEventListeners = (notif: Notification) => {
 
 const TurnOrder = (props: Props) => {
   React.useEffect(() => {
-    if (props.isNotificationEnabled && props.isActive) {
+    if (props.isActive) {
       const turnNotif = new Notification("Scythe Bidder", {
         body: "It's your turn!",
       });
 
       return addNotifEventListeners(turnNotif);
     }
-  }, [props.isNotificationEnabled, props.isActive]);
-
-  const isGameOver = !!props.ctx.gameover;
+  }, [props.isActive]);
 
   React.useEffect(() => {
-    if (props.isNotificationEnabled && isGameOver) {
+    if (props.ctx.gameover) {
       const endGameNotif = new Notification("Scythe Bidder", {
-        body: "Auction ended.",
+        body: "Bid ended.",
       });
 
       return addNotifEventListeners(endGameNotif);
     }
-  }, [props.isNotificationEnabled, isGameOver]);
+  }, [props.ctx.gameover]);
 
   return (
     <List
       header={
         <div css={{ padding: "0 24px", fontWeight: 500 }}>
-          {isGameOver
-            ? "Players"
+          {props.ctx.gameover
+            ? "Auction ended"
             : props.isActive
             ? "It's your turn!"
             : `Current player: ${
@@ -76,9 +73,11 @@ const TurnOrder = (props: Props) => {
           css={{
             padding: "12px 24px",
             fontWeight:
-              !isGameOver && props.ctx.currentPlayer === playerId ? 500 : 400,
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
+                ? 500
+                : 400,
             background:
-              !isGameOver && props.ctx.currentPlayer === playerId
+              !props.ctx.gameover && props.ctx.currentPlayer === playerId
                 ? "#e6f7ff"
                 : "#fff",
           }}

@@ -44,7 +44,6 @@ const BiddingBoard = (props: {
   gameMetadata?: Array<Player>;
   ctx: Ctx;
   matchId: string;
-  isNotificationEnabled?: boolean;
 }) => {
   const {
     G,
@@ -55,7 +54,6 @@ const BiddingBoard = (props: {
     gameMetadata,
     ctx,
     matchId,
-    isNotificationEnabled,
   } = props;
 
   const matchInfo = Lockr.get<MatchInfo | undefined>(CURRENT_MATCH_INFO);
@@ -155,7 +153,6 @@ const BiddingBoard = (props: {
             ctx={ctx}
             playerID={playerID}
             isActive={isActive}
-            isNotificationEnabled={isNotificationEnabled}
           />
           <div css={{ marginTop: 24 }}>
             <Button onClick={onLeave}>
