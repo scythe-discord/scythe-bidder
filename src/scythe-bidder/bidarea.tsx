@@ -3,6 +3,7 @@
 import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, InputNumber, notification, Table } from "antd";
+import { MAT_IMAGES } from "./constants";
 import { Faction, GameState, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
