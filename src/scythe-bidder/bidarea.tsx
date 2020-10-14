@@ -42,6 +42,7 @@ const BidArea = (props: {
     )
   );
   const onBid = (faction: Faction, mat: Mat) => {
+    const bid = bids[`${faction}:${mat}`];
     const currentCombo = props.G.combinations.find(
       ({ faction: f }) => faction === f
     );
@@ -49,9 +50,10 @@ const BidArea = (props: {
       return;
     }
     const currentBid = currentCombo.currentBid;
-    if (bids[`${faction}:${mat}`] <= currentBid) {
+    if (bid <= currentBid) {
       notification.error({
-        message:
+        message: "Error",
+        description:
           currentBid > -1
             ? `The current bid for ${faction} ${mat} is ${currentBid}. You must bid at least ${
                 currentBid + 1
@@ -60,10 +62,18 @@ const BidArea = (props: {
       });
       return;
     }
+
+    if (!Number.isInteger(bid)) {
+      notification.error({
+        message: "Error",
+        description: "Your bid must be an integer.",
+      });
+      return;
+    }
     props.moves.bid(
       faction,
       mat,
-      bids[`${faction}:${mat}`],
+      bid,
       props.playerInfo[Number(props.ctx.currentPlayer)]
     );
     if (typeof props.events.endTurn !== "function") {
@@ -113,6 +123,7 @@ const BidArea = (props: {
                   }
                   setBids({ ...bids, [`${combo.faction}:${combo.mat}`]: e });
                 }}
+                type="number"
               ></InputNumber>
               <Button
                 css={{ marginLeft: 12 }}
