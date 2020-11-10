@@ -4,14 +4,26 @@ import React from "react";
 import { jsx } from "@emotion/core";
 import { Button, Card, Form, notification, Select, Switch } from "antd";
 import client from "./client";
-import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
+import {
+  FACTIONS_BASE,
+  FACTIONS_IFA,
+  FACTIONS_HI,
+  FACTIONS_LO,
+  MATS_BASE,
+  MATS_IFA,
+  MATS_HI,
+  MATS_LO,
+} from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
-  const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
+  const [isHiTierActive, setIsHiTierActive] = React.useState<boolean>(true);
+  const [isLoTierActive, setIsLoTierActive] = React.useState<boolean>(true);
+  const [isMaxPlayerFive, setMaxPlayerFive] = React.useState<boolean>(true);
+  const maxPlayers = isMaxPlayerFive ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
@@ -21,7 +33,20 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
       };
-    } else {
+    }
+    if (isHiTierActive) {
+      setupData = {
+        factions: FACTIONS_HI,
+        mats: MATS_HI,
+      };
+    }
+    if (isLoTierActive) {
+      setupData = {
+        factions: FACTIONS_LO,
+        mats: MATS_LO,
+      };
+    }
+    if (isIfaActive && !isHiTierActive && !isLoTierActive) {
       setupData = {
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
@@ -78,6 +103,42 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                       notification.warning({
                         message: "Warning",
                         description: `The Scythe base game allows only 
+                                      up to ${MAX_PLAYERS_BASE} players.`,
+                      });
+                    }
+                  }
+                }}
+              />
+            </Form.Item>
+            <Form.Item label="High tier only" css={{ marginBottom: 0 }}>
+              <Switch
+                defaultChecked
+                onChange={(value) => {
+                  setIsHiTierActive(value);
+                  if (value) {
+                    if (numPlayers > MAX_PLAYERS_BASE) {
+                      setNumPlayers(MAX_PLAYERS_BASE);
+                      notification.warning({
+                        message: "Warning",
+                        description: `This version allows only 
+                                      up to ${MAX_PLAYERS_BASE} players.`,
+                      });
+                    }
+                  }
+                }}
+              />
+            </Form.Item>
+            <Form.Item label="low tier only" css={{ marginBottom: 0 }}>
+              <Switch
+                defaultChecked
+                onChange={(value) => {
+                  setIsLoTierActive(value);
+                  if (value) {
+                    if (numPlayers > MAX_PLAYERS_BASE) {
+                      setNumPlayers(MAX_PLAYERS_BASE);
+                      notification.warning({
+                        message: "Warning",
+                        description: `This version allows only 
                                       up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
