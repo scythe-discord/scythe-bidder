@@ -56,8 +56,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
-      (!isIfaActive && numPlayersNum > MAX_PLAYERS_BASE) ||
-      (isIfaActive && numPlayersNum > MAX_PLAYERS_IFA)
+      (isMaxPlayerFive && numPlayersNum > MAX_PLAYERS_BASE) ||
+      (!isMaxPlayerFive && numPlayersNum > MAX_PLAYERS_IFA)
     ) {
       return;
     }
@@ -70,7 +70,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, isIfaActive, onCreate]);
+  }, [numPlayers, isMaxPlayerFive, onCreate]);
 
   return (
     <Card
@@ -97,7 +97,13 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 defaultChecked
                 onChange={(value) => {
                   setIsIfaActive(value);
+                  if (value && !isLoTierActive && !isHiTierActive) {
+                    setMaxPlayerFive(!value);
+                  }
                   if (!value) {
+                    setIsHiTierActive(value);
+                    setIsLoTierActive(value);
+                    setMaxPlayerFive(!value);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
@@ -112,10 +118,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             </Form.Item>
             <Form.Item label="High tier only" css={{ marginBottom: 0 }}>
               <Switch
-                defaultChecked
                 onChange={(value) => {
                   setIsHiTierActive(value);
                   if (value) {
+                    setMaxPlayerFive(value);
+                    setIsLoTierActive(!value);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
@@ -124,16 +131,21 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                                       up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
+                    if (!isIfaActive) {
+                      setIsIfaActive(value);
+                    }
                   }
                 }}
               />
             </Form.Item>
-            <Form.Item label="low tier only" css={{ marginBottom: 0 }}>
+            <Form.Item label="Low tier only" css={{ marginBottom: 0 }}>
               <Switch
                 defaultChecked
                 onChange={(value) => {
                   setIsLoTierActive(value);
                   if (value) {
+                    setMaxPlayerFive(value);
+                    setIsHiTierActive(!value);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
@@ -141,6 +153,9 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                         description: `This version allows only 
                                       up to ${MAX_PLAYERS_BASE} players.`,
                       });
+                    }
+                    if (!isIfaActive) {
+                      setIsIfaActive(value);
                     }
                   }
                 }}
