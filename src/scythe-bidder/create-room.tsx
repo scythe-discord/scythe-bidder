@@ -20,9 +20,9 @@ import { SCYTHE_BIDDER } from "./constants";
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
-  const [isHiTierActive, setIsHiTierActive] = React.useState<boolean>(true);
-  const [isLoTierActive, setIsLoTierActive] = React.useState<boolean>(true);
-  const [isMaxPlayerFive, setMaxPlayerFive] = React.useState<boolean>(true);
+  const [isHiTierActive, setIsHiTierActive] = React.useState<boolean>(false);
+  const [isLoTierActive, setIsLoTierActive] = React.useState<boolean>(false);
+  const [isMaxPlayerFive, setMaxPlayerFive] = React.useState<boolean>(false);
   const maxPlayers = isMaxPlayerFive ? MAX_PLAYERS_BASE : MAX_PLAYERS_IFA;
 
   const onClick = React.useCallback(async () => {
@@ -70,7 +70,14 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, isMaxPlayerFive, onCreate]);
+  }, [
+    numPlayers,
+    isIfaActive,
+    isHiTierActive,
+    isLoTierActive,
+    isMaxPlayerFive,
+    onCreate,
+  ]);
 
   return (
     <Card
@@ -95,8 +102,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             <Form.Item label="IFA enabled" css={{ marginBottom: 0 }}>
               <Switch
                 defaultChecked
+                checked={isIfaActive}
                 onChange={(value) => {
                   setIsIfaActive(value);
+                  console.log("IFA was toggled to: ", value);
                   if (value && !isLoTierActive && !isHiTierActive) {
                     setMaxPlayerFive(!value);
                   }
@@ -118,8 +127,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             </Form.Item>
             <Form.Item label="High tier only" css={{ marginBottom: 0 }}>
               <Switch
+                checked={isHiTierActive}
                 onChange={(value) => {
                   setIsHiTierActive(value);
+                  console.log("Hi was toggled to: ", value);
                   if (value) {
                     setMaxPlayerFive(value);
                     setIsLoTierActive(!value);
@@ -140,9 +151,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             </Form.Item>
             <Form.Item label="Low tier only" css={{ marginBottom: 0 }}>
               <Switch
-                defaultChecked
+                checked={isLoTierActive}
                 onChange={(value) => {
                   setIsLoTierActive(value);
+                  console.log("Lo was toggled to: ", value);
                   if (value) {
                     setMaxPlayerFive(value);
                     setIsHiTierActive(!value);
