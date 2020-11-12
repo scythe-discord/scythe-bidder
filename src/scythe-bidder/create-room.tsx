@@ -21,10 +21,17 @@ import { QuestionCircleFilled } from "@ant-design/icons";
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
-  const [activeCombinations, setActiveCombinations] = React.useState<string>(
-    "IFA"
-  );
+  const [activeCombinations, setActiveCombinations] = React.useState<
+    GameSetting
+  >(0);
   const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
+
+  enum GameSetting {
+    IFA,
+    Base,
+    Hi,
+    Lo,
+  }
 
   const { Option } = Select;
 
@@ -69,25 +76,25 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
     let setupData = null;
-    if (activeCombinations === "Base") {
+    if (activeCombinations === 1) {
       setupData = {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
       };
     }
-    if (activeCombinations === "IFA") {
+    if (activeCombinations === 0) {
       setupData = {
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
       };
     }
-    if (activeCombinations === "Hi") {
+    if (activeCombinations === 2) {
       setupData = {
         factions: FACTIONS_HI,
         mats: MATS_HI,
       };
     }
-    if (activeCombinations === "Lo") {
+    if (activeCombinations === 3) {
       setupData = {
         factions: FACTIONS_LO,
         mats: MATS_LO,
@@ -135,11 +142,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             {/* margin is required for tighter spacing */}
             <Form.Item label={gameSettingLabel} css={{ marginBottom: 0 }}>
               <Select
-                defaultValue="IFA"
+                defaultValue={0}
                 style={{ width: 90 }}
                 onChange={(value) => {
                   setActiveCombinations(value);
-                  if (value !== "IFA") {
+                  if (value !== 0) {
                     setIsIfaActive(false);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
@@ -150,15 +157,15 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                       });
                     }
                   }
-                  if (value === "IFA") {
+                  if (value === 0) {
                     setIsIfaActive(true);
                   }
                 }}
               >
-                <Option value="IFA">IFA</Option>
-                <Option value="Base">Base</Option>
-                <Option value="Hi">Hi-Tier</Option>
-                <Option value="Lo">Lo-Tier</Option>
+                <Option value={0}>IFA</Option>
+                <Option value={1}>Base</Option>
+                <Option value={2}>Hi-Tier</Option>
+                <Option value={3}>Lo-Tier</Option>
               </Select>
             </Form.Item>
 
