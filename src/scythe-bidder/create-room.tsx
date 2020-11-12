@@ -30,7 +30,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
 
   const gameSettingLabel = [
     <div>
-      Game setting <QuestionCircleFilled onClick={settingInformation} />
+      Game setting{" "}
+      <QuestionCircleFilled
+        css={{ verticalAlign: "50%" }}
+        onClick={settingInformation}
+      />
     </div>,
   ];
 
