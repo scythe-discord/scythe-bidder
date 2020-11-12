@@ -20,11 +20,11 @@ import { QuestionCircleFilled } from "@ant-design/icons";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
   const [activeCombinations, setActiveCombinations] = React.useState<
     GameSetting
   >(0);
-  const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
+  const maxPlayers =
+    activeCombinations === 0 ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   enum GameSetting {
     IFA,
@@ -108,8 +108,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
-      (!isIfaActive && numPlayersNum > MAX_PLAYERS_BASE) ||
-      (isIfaActive && numPlayersNum > MAX_PLAYERS_IFA)
+      (activeCombinations !== 0 && numPlayersNum > MAX_PLAYERS_BASE) ||
+      (activeCombinations === 0 && numPlayersNum > MAX_PLAYERS_IFA)
     ) {
       return;
     }
@@ -122,7 +122,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, activeCombinations, isIfaActive, onCreate]);
+  }, [numPlayers, activeCombinations, onCreate]);
 
   return (
     <Card
@@ -151,7 +151,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 onChange={(value) => {
                   setActiveCombinations(value);
                   if (value !== 0) {
-                    setIsIfaActive(false);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
@@ -160,9 +159,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                                     up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
-                  }
-                  if (value === 0) {
-                    setIsIfaActive(true);
                   }
                 }}
               >
