@@ -143,7 +143,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             <Form.Item label={`Game setting`} css={{ marginBottom: 0 }}>
               <Select
                 defaultValue="IFA"
-                style={{ width: 70 }}
+                style={{ width: 90 }}
                 onChange={(value) => {
                   setActiveCombinations(value);
                   if (value !== "IFA") {
@@ -177,7 +177,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   setNumPlayers(value);
                 }}
                 placeholder="# of players"
-                style={{ width: 70 }}
+                style={{ width: 50 }}
               >
                 {Array(maxPlayers + 1 - MIN_PLAYERS)
                   .fill(null)
