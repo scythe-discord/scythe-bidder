@@ -2,29 +2,58 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, Form, notification, Select, Switch } from "antd";
+import { Button, Card, Form, notification, Select } from "antd";
+import { QuestionCircleFilled } from "@ant-design/icons";
 import client from "./client";
-import { FACTIONS_BASE, FACTIONS_IFA, MATS_BASE, MATS_IFA } from "./constants";
+import {
+  FACTIONS_BASE,
+  FACTIONS_IFA,
+  FACTIONS_HI,
+  FACTIONS_LO,
+  MATS_BASE,
+  MATS_IFA,
+  MATS_HI,
+  MATS_LO,
+} from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
   const [isIfaActive, setIsIfaActive] = React.useState<boolean>(true);
+  const [activeCombinations, setActiveCombinations] = React.useState<string>(
+    "IFA"
+  );
   const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
+
+  const { Option } = Select;
+  const question = QuestionCircleFilled;
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
     let setupData = null;
-    if (!isIfaActive) {
+    if (activeCombinations === "Base") {
       setupData = {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
       };
-    } else {
+    }
+    if (activeCombinations === "IFA") {
       setupData = {
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
+      };
+    }
+    if (activeCombinations === "Hi") {
+      setupData = {
+        factions: FACTIONS_HI,
+        mats: MATS_HI,
+      };
+    }
+    if (activeCombinations === "Lo") {
+      setupData = {
+        factions: FACTIONS_LO,
+        mats: MATS_LO,
       };
     }
     // this if check should be unnecessary
@@ -45,7 +74,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, isIfaActive, onCreate]);
+  }, [numPlayers, activeCombinations, isIfaActive, onCreate]);
 
   return (
     <Card
@@ -67,23 +96,33 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             wrapperCol={{ offset: 4, span: 4 }}
           >
             {/* margin is required for tighter spacing */}
-            <Form.Item label="IFA enabled" css={{ marginBottom: 0 }}>
-              <Switch
-                defaultChecked
+            <Form.Item label={`Game setting`} css={{ marginBottom: 0 }}>
+              <Select
+                defaultValue="IFA"
+                style={{ width: 70 }}
                 onChange={(value) => {
-                  setIsIfaActive(value);
-                  if (!value) {
+                  setActiveCombinations(value);
+                  if (value !== "IFA") {
+                    setIsIfaActive(false);
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
                         message: "Warning",
-                        description: `The Scythe base game allows only 
-                                      up to ${MAX_PLAYERS_BASE} players.`,
+                        description: `This setting allows only 
+                                    up to ${MAX_PLAYERS_BASE} players.`,
                       });
                     }
                   }
+                  if (value === "IFA") {
+                    setIsIfaActive(true);
+                  }
                 }}
-              />
+              >
+                <Option value="IFA">IFA</Option>
+                <Option value="Base">Base</Option>
+                <Option value="Hi">Hi-Tier</Option>
+                <Option value="Lo">Lo-Tier</Option>
+              </Select>
             </Form.Item>
             {/* margin is required for tighter spacing */}
             <Form.Item label="Number of players" css={{ marginBottom: 0 }}>
@@ -93,7 +132,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   setNumPlayers(value);
                 }}
                 placeholder="# of players"
-                style={{ width: 50 }}
+                style={{ width: 70 }}
               >
                 {Array(maxPlayers + 1 - MIN_PLAYERS)
                   .fill(null)
