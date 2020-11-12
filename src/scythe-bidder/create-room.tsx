@@ -35,15 +35,15 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
 
   const { Option } = Select;
 
-  const gameSettingLabel = [
+  const gameSettingLabel = (
     <div>
       Game setting{" "}
       <QuestionCircleFilled
         css={{ verticalAlign: "50%" }}
         onClick={settingInformation}
       />
-    </div>,
-  ];
+    </div>
+  );
 
   function settingInformation() {
     Modal.info({
