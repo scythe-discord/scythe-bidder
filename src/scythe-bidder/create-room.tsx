@@ -2,8 +2,7 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, Form, notification, Select } from "antd";
-import { QuestionCircleFilled } from "@ant-design/icons";
+import { Button, Card, Form, notification, Select, Popover } from "antd";
 import client from "./client";
 import {
   FACTIONS_BASE,
@@ -17,6 +16,7 @@ import {
 } from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
@@ -27,7 +27,30 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const { Option } = Select;
-  const question = QuestionCircleFilled;
+  const descriptionIfa = (
+    <div>
+      <p>IFA adds Togawa, Albion, Innovative,</p>
+      <p>and Militant to the base selection</p>
+    </div>
+  );
+  const descriptionBase = (
+    <div>
+      <p>Base game includes the five default</p>
+      <p>faction and mat combinations</p>
+    </div>
+  );
+  const descriptionHi = (
+    <div>
+      <p>Hi-tier removes Albion, Togawa,</p>
+      <p>Agricultural, and Engineering</p>
+    </div>
+  );
+  const descriptionLo = (
+    <div>
+      <p>Lo-tier removes Rusviet, Crimea,</p>
+      <p>Innovative, and Militant</p>
+    </div>
+  );
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
@@ -82,6 +105,27 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       title={
         <div css={{ display: "flex", justifyContent: "space-between" }}>
           <div>Create a room</div>
+          <Popover
+            content={() => {
+              if (activeCombinations === "IFA") {
+                return descriptionIfa;
+              }
+              if (activeCombinations === "Base") {
+                return descriptionBase;
+              }
+              if (activeCombinations === "Hi") {
+                return descriptionHi;
+              }
+              if (activeCombinations === "Lo") {
+                return descriptionLo;
+              }
+            }}
+            title="Current setting"
+            trigger="click"
+            placement="rightTop"
+          >
+            <QuestionCircleFilled />
+          </Popover>
           {/* <Switch css={{ marginLeft: 12 }} /> */}
         </div>
       }
@@ -124,6 +168,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 <Option value="Lo">Lo-Tier</Option>
               </Select>
             </Form.Item>
+
             {/* margin is required for tighter spacing */}
             <Form.Item label="Number of players" css={{ marginBottom: 0 }}>
               <Select<number>
