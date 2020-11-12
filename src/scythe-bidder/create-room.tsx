@@ -43,14 +43,16 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
           <p>Base includes the five default faction and mat options.</p>
           <p>
             Hi-tier setting removes Albion, Togawa, Agricultural, and
-            Engineering
+            Engineering.
           </p>
-          <p>Lo-tier removes Rusviet, Crimea, Innovative, and Militant</p>
+          <p>
+            Lo-tier setting removes Rusviet, Crimea, Innovative, and Militant.
+          </p>
           <p>
             <i>
               Learn more about tiers{" "}
               <a href="https://belovedpacifist.com/tiers" target="newWindow">
-                here
+                here.
               </a>
             </i>
           </p>
