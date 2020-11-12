@@ -2,7 +2,7 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, Form, notification, Select, Popover } from "antd";
+import { Button, Card, Form, notification, Select, Modal } from "antd";
 import client from "./client";
 import {
   FACTIONS_BASE,
@@ -27,30 +27,38 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const maxPlayers = isIfaActive ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const { Option } = Select;
-  const descriptionIfa = (
+
+  const gameSettingLabel = [
     <div>
-      <p>IFA adds Togawa, Albion, Innovative,</p>
-      <p>and Militant to the base selection</p>
-    </div>
-  );
-  const descriptionBase = (
-    <div>
-      <p>Base game includes the five default</p>
-      <p>faction and mat combinations</p>
-    </div>
-  );
-  const descriptionHi = (
-    <div>
-      <p>Hi-tier removes Albion, Togawa,</p>
-      <p>Agricultural, and Engineering</p>
-    </div>
-  );
-  const descriptionLo = (
-    <div>
-      <p>Lo-tier removes Rusviet, Crimea,</p>
-      <p>Innovative, and Militant</p>
-    </div>
-  );
+      Game setting <QuestionCircleFilled onClick={settingInformation} />
+    </div>,
+  ];
+
+  function settingInformation() {
+    Modal.info({
+      title: "Game setting details",
+      content: (
+        <div css={{ marginTop: 24 }}>
+          <p>IFA adds Togawa, Albion, Innovative, and Militant.</p>
+          <p>Base includes the five default faction and mat options.</p>
+          <p>
+            Hi-tier setting removes Albion, Togawa, Agricultural, and
+            Engineering
+          </p>
+          <p>Lo-tier removes Rusviet, Crimea, Innovative, and Militant</p>
+          <p>
+            <i>
+              Learn more about tiers{" "}
+              <a href="https://belovedpacifist.com/tiers" target="newWindow">
+                here
+              </a>
+            </i>
+          </p>
+        </div>
+      ),
+      onOk() {},
+    });
+  }
 
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
@@ -105,27 +113,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       title={
         <div css={{ display: "flex", justifyContent: "space-between" }}>
           <div>Create a room</div>
-          <Popover
-            content={() => {
-              if (activeCombinations === "IFA") {
-                return descriptionIfa;
-              }
-              if (activeCombinations === "Base") {
-                return descriptionBase;
-              }
-              if (activeCombinations === "Hi") {
-                return descriptionHi;
-              }
-              if (activeCombinations === "Lo") {
-                return descriptionLo;
-              }
-            }}
-            title="Current setting"
-            trigger="click"
-            placement="rightTop"
-          >
-            <QuestionCircleFilled />
-          </Popover>
           {/* <Switch css={{ marginLeft: 12 }} /> */}
         </div>
       }
@@ -140,7 +127,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             wrapperCol={{ offset: 4, span: 4 }}
           >
             {/* margin is required for tighter spacing */}
-            <Form.Item label="Game setting" css={{ marginBottom: 0 }}>
+            <Form.Item label={gameSettingLabel} css={{ marginBottom: 0 }}>
               <Select
                 defaultValue="IFA"
                 style={{ width: 90 }}
