@@ -140,7 +140,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             wrapperCol={{ offset: 4, span: 4 }}
           >
             {/* margin is required for tighter spacing */}
-            <Form.Item label={`Game setting`} css={{ marginBottom: 0 }}>
+            <Form.Item label="Game setting" css={{ marginBottom: 0 }}>
               <Select
                 defaultValue="IFA"
                 style={{ width: 90 }}
