@@ -62,7 +62,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
           <p>
             <i>
               Learn more about tiers{" "}
-              <a href="https://belovedpacifist.com/tiers" target="newWindow">
+              <a
+                href="https://belovedpacifist.com/tiers"
+                target="_blank"
+                rel="noopener"
+              >
                 here.
               </a>
             </i>
