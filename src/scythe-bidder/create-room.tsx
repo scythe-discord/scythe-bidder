@@ -16,7 +16,7 @@ import {
 } from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
-import { QuestionCircleFilled } from "@ant-design/icons";
+import { FileExcelFilled, QuestionCircleFilled } from "@ant-design/icons";
 
 enum GameSetting {
   Base,
@@ -36,10 +36,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const { Option } = Select;
 
   const gameSettingLabel = (
-    <div>
+    <div css={{ display: "flex", alignItems: "center" }}>
       Game setting{" "}
       <QuestionCircleFilled
-        css={{ verticalAlign: "50%" }}
+        css={{ marginLeft: 8 }}
+        // css={{ verticalAlign: "50%" }}
         onClick={settingInformation}
       />
     </div>
