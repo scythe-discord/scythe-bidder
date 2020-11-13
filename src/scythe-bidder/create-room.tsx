@@ -165,10 +165,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   }
                 }}
               >
-                <Option value={0}>Base</Option>
-                <Option value={1}>IFA</Option>
-                <Option value={2}>Hi-Tier</Option>
-                <Option value={3}>Lo-Tier</Option>
+                <Option value={GameSetting.Base}>Base</Option>
+                <Option value={GameSetting.IFA}>IFA</Option>
+                <Option value={GameSetting.Hi}>Hi-Tier</Option>
+                <Option value={GameSetting.Lo}>Lo-Tier</Option>
               </Select>
             </Form.Item>
 
