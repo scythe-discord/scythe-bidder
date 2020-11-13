@@ -18,20 +18,20 @@ import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
 import { QuestionCircleFilled } from "@ant-design/icons";
 
+enum GameSetting {
+  Base,
+  IFA,
+  Hi,
+  Lo,
+}
+
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [activeCombinations, setActiveCombinations] = React.useState<
-    GameSetting
-  >(0);
+  const [activeCombinations, setActiveCombinations] = React.useState(
+    GameSetting.IFA
+  );
   const maxPlayers =
-    activeCombinations === 0 ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
-
-  enum GameSetting {
-    IFA,
-    Base,
-    Hi,
-    Lo,
-  }
+    activeCombinations === GameSetting.IFA ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
 
   const { Option } = Select;
 
@@ -50,8 +50,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       title: "Game setting details",
       content: (
         <div css={{ marginTop: 24 }}>
+          <p>Base includes only the five default faction and mat options.</p>
           <p>IFA adds Togawa, Albion, Innovative, and Militant.</p>
-          <p>Base includes the five default faction and mat options.</p>
           <p>
             Hi-tier setting removes Albion, Togawa, Agricultural, and
             Engineering.
@@ -80,25 +80,25 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
     let setupData = null;
-    if (activeCombinations === 1) {
+    if (activeCombinations === GameSetting.Base) {
       setupData = {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
       };
     }
-    if (activeCombinations === 0) {
+    if (activeCombinations === GameSetting.IFA) {
       setupData = {
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
       };
     }
-    if (activeCombinations === 2) {
+    if (activeCombinations === GameSetting.Hi) {
       setupData = {
         factions: FACTIONS_HI,
         mats: MATS_HI,
       };
     }
-    if (activeCombinations === 3) {
+    if (activeCombinations === GameSetting.Lo) {
       setupData = {
         factions: FACTIONS_LO,
         mats: MATS_LO,
@@ -108,8 +108,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
     if (
       !numPlayersNum ||
       numPlayersNum < MIN_PLAYERS ||
-      (activeCombinations !== 0 && numPlayersNum > MAX_PLAYERS_BASE) ||
-      (activeCombinations === 0 && numPlayersNum > MAX_PLAYERS_IFA)
+      (activeCombinations !== GameSetting.IFA &&
+        numPlayersNum > MAX_PLAYERS_BASE) ||
+      (activeCombinations === GameSetting.IFA &&
+        numPlayersNum > MAX_PLAYERS_IFA)
     ) {
       return;
     }
@@ -146,11 +148,11 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             {/* margin is required for tighter spacing */}
             <Form.Item label={gameSettingLabel} css={{ marginBottom: 0 }}>
               <Select
-                defaultValue={0}
+                defaultValue={1}
                 style={{ width: 90 }}
                 onChange={(value) => {
                   setActiveCombinations(value);
-                  if (value !== 0) {
+                  if (value !== GameSetting.IFA) {
                     if (numPlayers > MAX_PLAYERS_BASE) {
                       setNumPlayers(MAX_PLAYERS_BASE);
                       notification.warning({
@@ -162,8 +164,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   }
                 }}
               >
-                <Option value={0}>IFA</Option>
-                <Option value={1}>Base</Option>
+                <Option value={0}>Base</Option>
+                <Option value={1}>IFA</Option>
                 <Option value={2}>Hi-Tier</Option>
                 <Option value={3}>Lo-Tier</Option>
               </Select>
