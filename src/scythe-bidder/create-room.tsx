@@ -16,7 +16,7 @@ import {
 } from "./constants";
 import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
-import { FileExcelFilled, QuestionCircleFilled } from "@ant-design/icons";
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 enum GameSetting {
   Base,
