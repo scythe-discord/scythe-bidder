@@ -48,6 +48,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   function settingInformation() {
     Modal.info({
       title: "Game setting details",
+      maskClosable: true,
       content: (
         <div css={{ marginTop: 24 }}>
           <p>Base includes only the five default faction and mat options.</p>
