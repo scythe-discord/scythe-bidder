@@ -19,10 +19,10 @@ import { SCYTHE_BIDDER } from "./constants";
 import { QuestionCircleFilled } from "@ant-design/icons";
 
 enum GameSetting {
-  Base,
+  BASE,
   IFA,
-  Hi,
-  Lo,
+  HI,
+  LO,
 }
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
@@ -82,7 +82,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const onClick = React.useCallback(async () => {
     const numPlayersNum = Number(numPlayers);
     let setupData = null;
-    if (activeCombinations === GameSetting.Base) {
+    if (activeCombinations === GameSetting.BASE) {
       setupData = {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
@@ -94,13 +94,13 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
         mats: MATS_IFA,
       };
     }
-    if (activeCombinations === GameSetting.Hi) {
+    if (activeCombinations === GameSetting.HI) {
       setupData = {
         factions: FACTIONS_HI,
         mats: MATS_HI,
       };
     }
-    if (activeCombinations === GameSetting.Lo) {
+    if (activeCombinations === GameSetting.LO) {
       setupData = {
         factions: FACTIONS_LO,
         mats: MATS_LO,
@@ -166,10 +166,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   }
                 }}
               >
-                <Option value={GameSetting.Base}>Base</Option>
+                <Option value={GameSetting.BASE}>Base</Option>
                 <Option value={GameSetting.IFA}>IFA</Option>
-                <Option value={GameSetting.Hi}>Hi-Tier</Option>
-                <Option value={GameSetting.Lo}>Lo-Tier</Option>
+                <Option value={GameSetting.HI}>Hi-Tier</Option>
+                <Option value={GameSetting.LO}>Lo-Tier</Option>
               </Select>
             </Form.Item>
 
