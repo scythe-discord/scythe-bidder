@@ -34,6 +34,38 @@ export const FACTIONS_IFA = [
   "Rusviet",
 ] as const;
 
+export const MATS_HI = [
+  "Industrial",
+  "Militant",
+  "Patriotic",
+  "Innovative",
+  "Mechanical",
+] as const;
+
+export const FACTIONS_HI = [
+  "Crimea",
+  "Saxony",
+  "Polania",
+  "Nordic",
+  "Rusviet",
+] as const;
+
+export const MATS_LO = [
+  "Industrial",
+  "Engineering",
+  "Patriotic",
+  "Mechanical",
+  "Agricultural",
+] as const;
+
+export const FACTIONS_LO = [
+  "Togawa",
+  "Saxony",
+  "Polania",
+  "Albion",
+  "Nordic",
+] as const;
+
 export const SCYTHE_BIDDER = "scythe-bidder";
 
 export const PLAYER_NAME = "playerName";
