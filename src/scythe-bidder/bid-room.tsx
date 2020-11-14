@@ -76,11 +76,13 @@ export default function BidRoom({ isNotificationEnabled }: Props) {
     };
   }, [init, matchId]);
 
+  const currentMatchInfo = Lockr.get<MatchInfo | undefined>(CURRENT_MATCH_INFO);
+
   return gameState && gameClientRef.current ? (
     <BiddingBoard
       G={gameState.G}
       ctx={gameState.ctx}
-      isActive={gameState.isActive}
+      isActive={gameState.isActive && currentMatchInfo?.matchId === matchId}
       moves={gameClientRef.current.moves}
       events={gameClientRef.current.events}
       playerID={gameClientRef.current.playerID}
