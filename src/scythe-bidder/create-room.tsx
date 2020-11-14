@@ -67,7 +67,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
               <a
                 href="https://belovedpacifist.com/tiers"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 here.
               </a>
