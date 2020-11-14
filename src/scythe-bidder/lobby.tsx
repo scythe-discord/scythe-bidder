@@ -148,7 +148,7 @@ export default function Lobby() {
 
   return (
     <Row gutter={24}>
-      <Col xs={24} lg={7}>
+      <Col xs={24} xl={7}>
         <Card
           title={
             savedPlayerName ? `Welcome, ${savedPlayerName}` : "Enter your name"
@@ -192,7 +192,7 @@ export default function Lobby() {
           {savedPlayerName && <CreateRoom onCreate={fetchMatches} />}
         </Animate>
       </Col>
-      <Col xs={24} lg={17}>
+      <Col xs={24} xl={17}>
         {loading ? (
           <div css={{ display: "flex" }}>
             <Spin css={{ margin: "48px auto" }} />
