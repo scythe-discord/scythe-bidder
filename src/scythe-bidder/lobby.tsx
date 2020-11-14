@@ -200,7 +200,7 @@ export default function Lobby() {
         ) : (
           <Table
             dataSource={matches}
-            css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}
+            css={{ marginTop: 24, [mq[4]]: { marginTop: 0 } }}
             rowKey={(match) => match.matchID}
             locale={{ emptyText: <em>No ongoing games</em> }}
           >
