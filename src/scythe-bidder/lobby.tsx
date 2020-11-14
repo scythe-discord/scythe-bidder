@@ -227,6 +227,13 @@ export default function Lobby() {
               }}
             />
             <Table.Column
+              title="Setting"
+              dataIndex="matchID"
+              render={(matchId, match: LobbyAPI.Match) => {
+                return <div>{match.setupData.setting}</div>;
+              }}
+            />
+            <Table.Column
               width={120}
               title="# of players"
               dataIndex="players"
