@@ -148,7 +148,7 @@ export default function Lobby() {
 
   return (
     <Row gutter={24}>
-      <Col xs={24} lg={7}>
+      <Col xs={24} xl={7}>
         <Card
           title={
             savedPlayerName ? `Welcome, ${savedPlayerName}` : "Enter your name"
@@ -192,7 +192,7 @@ export default function Lobby() {
           {savedPlayerName && <CreateRoom onCreate={fetchMatches} />}
         </Animate>
       </Col>
-      <Col xs={24} lg={17}>
+      <Col xs={24} xl={17}>
         {loading ? (
           <div css={{ display: "flex" }}>
             <Spin css={{ margin: "48px auto" }} />
@@ -200,7 +200,7 @@ export default function Lobby() {
         ) : (
           <Table
             dataSource={matches}
-            css={{ marginTop: 24, [mq[3]]: { marginTop: 0 } }}
+            css={{ marginTop: 24, [mq[4]]: { marginTop: 0 } }}
             rowKey={(match) => match.matchID}
             locale={{ emptyText: <em>No ongoing games</em> }}
           >
@@ -224,6 +224,13 @@ export default function Lobby() {
                 return {
                   children: content,
                 };
+              }}
+            />
+            <Table.Column
+              title="Setting"
+              dataIndex="matchID"
+              render={(matchId, match: LobbyAPI.Match) => {
+                return <div>{match.setupData.setting}</div>;
               }}
             />
             <Table.Column
