@@ -2,7 +2,7 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, InputNumber, notification, Table } from "antd";
+import { Button, InputNumber, notification, Popover, Table } from "antd";
 import { Faction, GameState, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
@@ -152,13 +152,27 @@ const BidArea = (props: {
         dataIndex="mat"
         render={(mat: Mat) => {
           return (
-            <a
-              href={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Popover
+              content={
+                <div>
+                  <img
+                    alt={mat}
+                    src={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
+                    height={244}
+                    width={630}
+                  />
+                </div>
+              }
+              trigger="click"
             >
-              {mat}
-            </a>
+              <a
+                href={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {mat}
+              </a>
+            </Popover>
           );
         }}
       />
