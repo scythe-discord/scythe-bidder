@@ -83,39 +83,49 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
 };
 
 const setup = (ctx: Ctx, setupData: any) => {
+  let combosValid = false;
   let gameCombinations: Array<CombinationWithBid> = [];
-  const remainingCombos: { [key: string]: Array<Mat> } = {};
-  for (const faction of setupData.factions) {
-    remainingCombos[faction] = [
-      ...setupData.mats.filter(
-        (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
-      ),
-    ];
-  }
-  for (let i = 0; i < ctx.numPlayers; i++) {
-    const remainingFactions = Object.keys(remainingCombos);
-    const pickedFaction =
-      remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
-    const remainingPlayerMats = remainingCombos[pickedFaction];
-    const pickedPlayerMat =
-      remainingPlayerMats[
-        Math.floor(Math.random() * remainingPlayerMats.length)
+  while (combosValid === false) {
+    combosValid = true;
+    gameCombinations = [];
+    const remainingCombos: { [key: string]: Array<Mat> } = {};
+    for (const faction of setupData.factions) {
+      remainingCombos[faction] = [
+        ...setupData.mats.filter(
+          (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
+        ),
       ];
+    }
+    for (let i = 0; i < ctx.numPlayers; i++) {
+      const remainingFactions = Object.keys(remainingCombos);
+      const pickedFaction =
+        remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
+      const remainingPlayerMats = remainingCombos[pickedFaction];
+      const pickedPlayerMat =
+        remainingPlayerMats[
+          Math.floor(Math.random() * remainingPlayerMats.length)
+        ];
+      if (pickedPlayerMat === undefined) {
+        // This check will be true for banned combos
+        // (when we have max players) and so we repick.
+        combosValid = false;
+      }
 
-    remainingFactions.forEach(
-      (faction) =>
-        (remainingCombos[faction] = remainingCombos[faction].filter(
-          (mat) => mat !== pickedPlayerMat
-        ))
-    );
-    delete remainingCombos[pickedFaction];
+      remainingFactions.forEach(
+        (faction) =>
+          (remainingCombos[faction] = remainingCombos[faction].filter(
+            (mat) => mat !== pickedPlayerMat
+          ))
+      );
+      delete remainingCombos[pickedFaction];
 
-    gameCombinations.push({
-      faction: pickedFaction as Faction,
-      mat: pickedPlayerMat as Mat,
-      currentBid: -1,
-      currentHolder: null,
-    });
+      gameCombinations.push({
+        faction: pickedFaction as Faction,
+        mat: pickedPlayerMat as Mat,
+        currentBid: -1,
+        currentHolder: null,
+      });
+    }
   }
 
   return {
