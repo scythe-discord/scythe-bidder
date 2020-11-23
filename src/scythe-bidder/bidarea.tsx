@@ -158,8 +158,7 @@ const BidArea = (props: {
                   <img
                     alt={mat}
                     src={`${process.env.PUBLIC_URL}/mats/${mat}.png`}
-                    height={244}
-                    width={630}
+                    style={{ width: 630, maxWidth: "90vw", height: "auto" }}
                   />
                 </div>
               }
