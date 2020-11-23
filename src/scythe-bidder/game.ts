@@ -88,36 +88,15 @@ const setup = (ctx: Ctx, setupData: any) => {
   while (combosValid === false) {
     combosValid = true;
     gameCombinations = [];
-    const remainingCombos: { [key: string]: Array<Mat> } = {};
-    for (const faction of setupData.factions) {
-      remainingCombos[faction] = [
-        ...setupData.mats.filter(
-          (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
-        ),
-      ];
-    }
-    for (let i = 0; i < ctx.numPlayers; i++) {
-      const remainingFactions = Object.keys(remainingCombos);
-      const pickedFaction =
-        remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
-      const remainingPlayerMats = remainingCombos[pickedFaction];
-      const pickedPlayerMat =
-        remainingPlayerMats[
-          Math.floor(Math.random() * remainingPlayerMats.length)
-        ];
-      if (pickedPlayerMat === undefined) {
-        // This check will be true for banned combos
-        // (when we have max players) and so we repick.
-        combosValid = false;
-      }
 
-      remainingFactions.forEach(
-        (faction) =>
-          (remainingCombos[faction] = remainingCombos[faction].filter(
-            (mat) => mat !== pickedPlayerMat
-          ))
-      );
-      delete remainingCombos[pickedFaction];
+    const remainingFactions = setupData.factions.map((x: Faction) => x);
+    const remainingMats = setupData.mats.map((x: Mat) => x);
+
+    for (let i = 0; i < ctx.numPlayers; i++) {
+      const idxF = Math.floor(Math.random() * remainingFactions.length);
+      const idxM = Math.floor(Math.random() * remainingMats.length);
+      const pickedFaction = remainingFactions.splice(idxF, 1)[0];
+      const pickedPlayerMat = remainingMats.splice(idxM, 1)[0];
 
       gameCombinations.push({
         faction: pickedFaction as Faction,
@@ -125,6 +104,12 @@ const setup = (ctx: Ctx, setupData: any) => {
         currentBid: -1,
         currentHolder: null,
       });
+    }
+    for (const gameCombo of gameCombinations) {
+      if (checkBannedCombos(gameCombo.faction, gameCombo.mat) === true) {
+        combosValid = false;
+        break;
+      }
     }
   }
 
