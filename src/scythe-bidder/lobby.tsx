@@ -252,6 +252,7 @@ export default function Lobby() {
                 const matchIsFull =
                   match.players.length ===
                   match.players.filter((p) => !!p.name).length;
+                const matchEnded = match.gameover !== undefined;
                 let content = null;
                 if (
                   currentMatchInfoRef.current?.matchId === matchId &&
@@ -273,7 +274,7 @@ export default function Lobby() {
                   );
                 } else if (!playerIsInMatch) {
                   content =
-                    savedPlayerName && !matchIsFull ? (
+                    savedPlayerName && !matchIsFull && !matchEnded ? (
                       <Button
                         onClick={() => {
                           onJoin(matchId);
