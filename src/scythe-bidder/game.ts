@@ -88,6 +88,7 @@ const setup = (ctx: Ctx, setupData: any) => {
   while (combosValid === false) {
     combosValid = true;
     gameCombinations = [];
+    let rejectMatCount = 0;
 
     const remainingFactions = setupData.factions.map((x: Faction) => x);
     const remainingMats = setupData.mats.map((x: Mat) => x);
@@ -106,9 +107,18 @@ const setup = (ctx: Ctx, setupData: any) => {
       });
     }
     for (const gameCombo of gameCombinations) {
+      if (gameCombo.mat === "Industrial" || gameCombo.mat === "Patriotic") {
+        rejectMatCount = rejectMatCount + 1;
+      }
       if (checkBannedCombos(gameCombo.faction, gameCombo.mat) === true) {
         combosValid = false;
         break;
+      }
+    }
+    // reject set of valid combos to make combo generation probability equal
+    if (combosValid === true) {
+      if (Math.random() < 0.1425 * rejectMatCount) {
+        combosValid = false;
       }
     }
   }
