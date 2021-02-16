@@ -153,6 +153,8 @@ export default function Lobby() {
           title={
             savedPlayerName ? `Welcome, ${savedPlayerName}` : "Enter your name"
           }
+          style={{ marginBottom: 24, backgroundColor: "var(--ov-2)" }}
+          bodyStyle={{ backgroundColor: "var(--ov-1)" }}
         >
           {savedPlayerName ? (
             <Button onClick={onLogout} danger>
