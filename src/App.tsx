@@ -7,7 +7,7 @@ import LobbyView from "./scythe-bidder/lobby";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
 import "antd/dist/antd.css";
-import { Button, Layout, Tooltip } from "antd";
+import { Button, Layout, Tooltip, Input, Switch as Toggle } from "antd";
 import { BellOutlined, BellFilled } from "@ant-design/icons";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BidRoom from "./scythe-bidder/bid-room";
@@ -15,6 +15,8 @@ import { config } from "dotenv";
 import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
 import { NOTIFICATION_ENABLED } from "./scythe-bidder/constants";
+
+import { useThemeSwitcher } from "react-css-theme-switcher";
 
 config();
 
@@ -62,6 +64,25 @@ const App = () => {
     Lockr.set(NOTIFICATION_ENABLED, String(isNotificationEnabled));
   }, [isNotificationEnabled]);
 
+  // themeswitch logic
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+
+  const toggleTheme = () => {
+    if (isDarkMode) {
+      setIsDarkMode(false);
+      switcher({ theme: themes.light });
+    } else {
+      setIsDarkMode(true);
+      switcher({ theme: themes.dark });
+    }
+  };
+
+  // Avoid theme change flicker
+  if (status === "loading") {
+    return null;
+  }
+
   return (
     <Layout>
       <Layout.Header
@@ -84,6 +105,9 @@ const App = () => {
           }}
         >
           Scythe Bidder
+        </div>
+        <div>
+          <Toggle checked={isDarkMode} onChange={toggleTheme} />
         </div>
         <a
           href="https://github.com/rezende/scythe-bidder"
