@@ -10,14 +10,11 @@ const GameLog = (props: { G: GameState }) => {
     <List
       dataSource={G.gameLogger}
       renderItem={(msg, key) => (
-        <List.Item
-          css={{ background: "white", padding: "12px 24px" }}
-          key={key}
-        >
+        <List.Item css={{ padding: "12px 24px" }} key={key}>
           {msg}
         </List.Item>
       )}
-      css={{ background: "#fff", marginTop: 24 }}
+      css={{ marginTop: 24 }}
     ></List>
   );
 };
