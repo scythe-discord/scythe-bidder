@@ -106,16 +106,33 @@ const App = () => {
         >
           Scythe Bidder
         </div>
-        <div>
-          <Toggle checked={isDarkMode} onChange={toggleTheme} />
-        </div>
-        <a
-          href="https://github.com/rezende/scythe-bidder"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "30%",
+            minWidth: 200,
+          }}
         >
-          Contribute on GitHub
-        </a>
+          <div>
+            <a
+              href="https://github.com/rezende/scythe-bidder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Contribute on GitHub
+            </a>
+          </div>
+          <div>
+            <Toggle
+              checked={isDarkMode}
+              onChange={toggleTheme}
+              style={isDarkMode ? {} : { backgroundColor: "#8c8c8c" }}
+            />
+          </div>
+        </div>
       </Layout.Header>
       <Layout.Content
         css={{

@@ -14,7 +14,7 @@ const GameLog = (props: { G: GameState }) => {
           {msg}
         </List.Item>
       )}
-      css={{ marginTop: 24 }}
+      css={{ marginTop: 24, backgroundColor: "var(--ov-1)" }}
     ></List>
   );
 };
