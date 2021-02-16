@@ -24782,3 +24782,10 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+:root {
+  --ov-0: rgba(255, 255, 255, 0.85);
+  --ov-1: rgba(255, 255, 255, 0.65);
+  --ov-2: rgba(255, 255, 255, 0.45);
+  --ov-3: rgba(255, 255, 255, 0.3);
+  --accent: #e6f7ff;
+}

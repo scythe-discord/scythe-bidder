@@ -25046,3 +25046,10 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+:root {
+  --ov-0: #000000;
+  --ov-1: #141414;
+  --ov-2: #1f1f1f;
+  --ov-3: #262626;
+  --accent: #111d2c;
+}
