@@ -92,7 +92,11 @@ const App = () => {
   // Icon to display based on theme setting
   const themeIcon = isDarkTheme ? (
     <Brightness5
-      style={{ textDecoration: "inherit", marginLeft: 20 }}
+      style={{
+        textDecoration: "inherit",
+        marginLeft: 20,
+        color: "var(--icon-color)",
+      }}
       onClick={handleTheme}
     />
   ) : (
@@ -100,7 +104,7 @@ const App = () => {
       style={{
         textDecoration: "inherit",
         marginLeft: 20,
-        color: "rgba(255, 255, 255, .8)",
+        color: "var(--icon-color)",
       }}
       onClick={handleTheme}
     />
