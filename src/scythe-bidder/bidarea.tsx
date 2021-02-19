@@ -121,7 +121,6 @@ const BidArea = (props: {
       ></Table.Column>
       <Table.Column
         title="Faction"
-        css={{ background: "#fff" }}
         width={72}
         dataIndex="faction"
         render={(faction) => {
@@ -145,7 +144,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Player mat"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="mat"
         render={(mat: Mat) => {
@@ -163,7 +161,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Current bid"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="currentBid"
         render={(currentBid) => {
@@ -176,7 +173,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Highest bidder"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="currentHolder"
         render={(currentHolder) => {
