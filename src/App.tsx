@@ -93,14 +93,16 @@ const App = () => {
   // Icon to display based on theme setting
   const themeIcon = isDarkTheme ? (
     <Brightness5
-      color={"primary"}
       style={{ textDecoration: "inherit", marginLeft: 20 }}
       onClick={handleTheme}
     />
   ) : (
     <Brightness4
-      color={"primary"}
-      style={{ textDecoration: "inherit", marginLeft: 20 }}
+      style={{
+        textDecoration: "inherit",
+        marginLeft: 20,
+        color: "rgba(255, 255, 255, .8)",
+      }}
       onClick={handleTheme}
     />
   );
