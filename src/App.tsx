@@ -14,7 +14,7 @@ import BidRoom from "./scythe-bidder/bid-room";
 import { config } from "dotenv";
 import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
-import { NOTIFICATION_ENABLED } from "./scythe-bidder/constants";
+import { NOTIFICATION_ENABLED, DARK_MODE } from "./scythe-bidder/constants";
 
 import { useThemeSwitcher } from "react-css-theme-switcher";
 
@@ -65,7 +65,10 @@ const App = () => {
   }, [isNotificationEnabled]);
 
   // themeswitch logic
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
+
+  const userTheme = Lockr.get<string | undefined>(DARK_MODE) === "true";
+
+  const [isDarkMode, setIsDarkMode] = React.useState(userTheme);
   const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
   const toggleTheme = () => {
@@ -77,6 +80,9 @@ const App = () => {
       switcher({ theme: themes.dark });
     }
   };
+  React.useEffect(() => {
+    Lockr.set(DARK_MODE, String(isDarkMode));
+  }, [isDarkMode]);
 
   // Avoid theme change flicker
   if (status === "loading") {

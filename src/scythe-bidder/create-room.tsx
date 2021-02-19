@@ -130,7 +130,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
 
   return (
     <Card
-      style={{ backgroundColor: "var(--ov-2)" }}
+      style={{ backgroundColor: "var(--ov-2)", marginTop: 24 }}
       bodyStyle={{ backgroundColor: "var(--ov-1)" }}
       title={
         <div css={{ display: "flex", justifyContent: "space-between" }}>
