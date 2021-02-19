@@ -25046,3 +25046,6 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+.ant-card-head {
+  background-color: #262626;
+}
