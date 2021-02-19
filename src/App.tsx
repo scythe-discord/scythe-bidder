@@ -70,12 +70,12 @@ const App = () => {
   // Theme hook
   const [isDarkTheme, setIsDarkTheme] = React.useState(themeSetting);
   // Controls style imports
-  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+  const { switcher, status, themes } = useThemeSwitcher();
 
   // Switch theme on click
   const handleTheme = React.useCallback(() => {
     setIsDarkTheme((prev) => !prev);
-  }, [isDarkTheme]);
+  }, []);
 
   React.useEffect(() => {
     Lockr.set(DARK_THEME, String(isDarkTheme));
@@ -84,7 +84,7 @@ const App = () => {
     } else {
       switcher({ theme: themes.light });
     }
-  }, [isDarkTheme]);
+  }, [isDarkTheme, switcher, themes]);
 
   // Avoid theme change flicker
   if (status === "loading") {
