@@ -17,6 +17,7 @@ import { config } from "dotenv";
 import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
 import { NOTIFICATION_ENABLED, DARK_THEME } from "./scythe-bidder/constants";
+import { useThemeSwitcher } from "react-css-theme-switcher";
 
 config();
 
@@ -69,7 +70,7 @@ const App = () => {
   // Theme hook
   const [isDarkTheme, setIsDarkTheme] = React.useState(themeSetting);
   // Controls style imports
-  // const { switcher, currentTheme, status, themes } = useThemeSwitcher();
+  const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
   // Switch theme on click
   const handleTheme = React.useCallback(() => {
@@ -78,7 +79,17 @@ const App = () => {
 
   React.useEffect(() => {
     Lockr.set(DARK_THEME, String(isDarkTheme));
+    if (isDarkTheme) {
+      switcher({ theme: themes.dark });
+    } else {
+      switcher({ theme: themes.light });
+    }
   }, [isDarkTheme]);
+
+  // Avoid theme change flicker
+  if (status === "loading") {
+    return null;
+  }
   // Icon to display based on theme setting
   const themeIcon = isDarkTheme ? (
     <Brightness5

@@ -15753,6 +15753,7 @@ table tr th.ant-table-selection-column .ant-radio-wrapper {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+*,
 .ant-menu-item-group-list {
   margin: 0;
   padding: 0;

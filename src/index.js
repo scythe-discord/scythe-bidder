@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import { ThemeSwitchProvider } from "react-css-theme-switcher";
+import { ThemeSwitcherProvider } from "react-css-theme-switcher";
 
 const themes = {
   dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
@@ -11,9 +11,9 @@ const themes = {
 };
 
 ReactDOM.render(
-  <ThemeSwitchProvider defaultTheme="light" themeMap={themes}>
+  <ThemeSwitcherProvider themeMap={themes}>
     <App />
-  </ThemeSwitchProvider>,
+  </ThemeSwitcherProvider>,
   document.getElementById("root")
 );
 
