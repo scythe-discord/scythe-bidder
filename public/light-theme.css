@@ -24782,3 +24782,8 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
+:root {
+  --accent-blue: #bae7ff;
+  --background-list-header: #fafafa;
+  --background-list-body: #ffffff;
+}

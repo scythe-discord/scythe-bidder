@@ -79,14 +79,14 @@ const TurnOrder = (props: Props) => {
               !isGameOver && props.ctx.currentPlayer === playerId ? 500 : 400,
             background:
               !isGameOver && props.ctx.currentPlayer === playerId
-                ? "#e6f7ff"
-                : "#fff",
+                ? "var(--accent-blue)"
+                : "var(--background-list-body)",
           }}
         >
           {idx + 1}. {props.players[parseInt(playerId)].name}
         </List.Item>
       )}
-      css={{ background: "#fff" }}
+      css={{ background: "var(--background-list-header)" }}
     ></List>
   );
 };
