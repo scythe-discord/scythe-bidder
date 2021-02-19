@@ -83,14 +83,12 @@ const BidArea = (props: {
       dataSource={props.G.combinations}
       css={{
         overflow: "auto",
-        tbody: { background: "#fff" },
         ".ant-table": { overflow: "auto" },
       }}
       rowKey={(combo) => `${combo.faction}:${combo.mat}`}
       pagination={false}
     >
       <Table.Column
-        css={{ background: "#fff" }}
         width={120}
         render={(combo) => {
           return (
