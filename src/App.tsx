@@ -9,6 +9,7 @@ import "./layout.css";
 import "antd/dist/antd.css";
 import { Button, Layout, Tooltip } from "antd";
 import { BellOutlined, BellFilled } from "@ant-design/icons";
+import { Brightness4 as Moon, Brightness5 as Sun } from "@material-ui/icons";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BidRoom from "./scythe-bidder/bid-room";
 import { config } from "dotenv";
