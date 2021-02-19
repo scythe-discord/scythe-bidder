@@ -9,13 +9,14 @@ import "./layout.css";
 import "antd/dist/antd.css";
 import { Button, Layout, Tooltip } from "antd";
 import { BellOutlined, BellFilled } from "@ant-design/icons";
-import { Brightness4 as Moon, Brightness5 as Sun } from "@material-ui/icons";
+import Brightness4 from "@material-ui/icons/Brightness4";
+import Brightness5 from "@material-ui/icons/Brightness5";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import BidRoom from "./scythe-bidder/bid-room";
 import { config } from "dotenv";
 import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
-import { NOTIFICATION_ENABLED } from "./scythe-bidder/constants";
+import { NOTIFICATION_ENABLED, DARK_THEME } from "./scythe-bidder/constants";
 
 config();
 
@@ -63,6 +64,31 @@ const App = () => {
     Lockr.set(NOTIFICATION_ENABLED, String(isNotificationEnabled));
   }, [isNotificationEnabled]);
 
+  const themeSetting = Lockr.get<string | undefined>(DARK_THEME) === "true";
+
+  const [isDarkTheme, setIsDarkTheme] = React.useState(themeSetting);
+
+  const handleTheme = React.useCallback(() => {
+    setIsDarkTheme((prev) => !prev);
+  }, [isDarkTheme]);
+
+  React.useEffect(() => {
+    Lockr.set(DARK_THEME, String(isDarkTheme));
+  }, [isDarkTheme]);
+
+  const themeIcon = isDarkTheme ? (
+    <Brightness5
+      color={"primary"}
+      style={{ textDecoration: "inherit" }}
+      onClick={handleTheme}
+    />
+  ) : (
+    <Brightness4
+      color={"primary"}
+      style={{ textDecoration: "inherit" }}
+      onClick={handleTheme}
+    />
+  );
   return (
     <Layout>
       <Layout.Header
@@ -93,6 +119,7 @@ const App = () => {
         >
           Contribute on GitHub
         </a>
+        {themeIcon}
       </Layout.Header>
       <Layout.Content
         css={{
