@@ -64,10 +64,14 @@ const App = () => {
     Lockr.set(NOTIFICATION_ENABLED, String(isNotificationEnabled));
   }, [isNotificationEnabled]);
 
+  // Lockr for theme state
   const themeSetting = Lockr.get<string | undefined>(DARK_THEME) === "true";
-
+  // Theme hook
   const [isDarkTheme, setIsDarkTheme] = React.useState(themeSetting);
+  // Controls style imports
+  // const { switcher, currentTheme, status, themes } = useThemeSwitcher();
 
+  // Switch theme on click
   const handleTheme = React.useCallback(() => {
     setIsDarkTheme((prev) => !prev);
   }, [isDarkTheme]);
@@ -75,20 +79,21 @@ const App = () => {
   React.useEffect(() => {
     Lockr.set(DARK_THEME, String(isDarkTheme));
   }, [isDarkTheme]);
-
+  // Icon to display based on theme setting
   const themeIcon = isDarkTheme ? (
     <Brightness5
       color={"primary"}
-      style={{ textDecoration: "inherit" }}
+      style={{ textDecoration: "inherit", marginLeft: 20 }}
       onClick={handleTheme}
     />
   ) : (
     <Brightness4
       color={"primary"}
-      style={{ textDecoration: "inherit" }}
+      style={{ textDecoration: "inherit", marginLeft: 20 }}
       onClick={handleTheme}
     />
   );
+
   return (
     <Layout>
       <Layout.Header
@@ -112,14 +117,16 @@ const App = () => {
         >
           Scythe Bidder
         </div>
-        <a
-          href="https://github.com/rezende/scythe-bidder"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Contribute on GitHub
-        </a>
-        {themeIcon}
+        <div>
+          <a
+            href="https://github.com/rezende/scythe-bidder"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contribute on GitHub
+          </a>
+          {themeIcon}
+        </div>
       </Layout.Header>
       <Layout.Content
         css={{
