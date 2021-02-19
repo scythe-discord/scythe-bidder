@@ -6,7 +6,6 @@ import { jsx } from "@emotion/core";
 import LobbyView from "./scythe-bidder/lobby";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
-import "antd/dist/antd.css";
 import { Button, Layout, Tooltip } from "antd";
 import { BellOutlined, BellFilled } from "@ant-design/icons";
 import Brightness4 from "@material-ui/icons/Brightness4";

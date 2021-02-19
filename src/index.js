@@ -11,7 +11,10 @@ const themes = {
 };
 
 ReactDOM.render(
-  <ThemeSwitcherProvider themeMap={themes}>
+  <ThemeSwitcherProvider
+    insertionPoint="styles-insertion-point"
+    themeMap={themes}
+  >
     <App />
   </ThemeSwitcherProvider>,
   document.getElementById("root")
