@@ -124,6 +124,30 @@ const BidArea = (props: {
         width={72}
         dataIndex="faction"
         render={(faction) => {
+          let imageLocation = "";
+          switch (faction) {
+            case "Albion":
+              imageLocation = "./static/images/Albion.webp";
+              break;
+            case "Togawa":
+              imageLocation = "./static/images/Togawa.webp";
+              break;
+            case "Nordic":
+              imageLocation = "./static/images/Nordic.png";
+              break;
+            case "Rusviet":
+              imageLocation = "./static/images/Rusviet.png";
+              break;
+            case "Crimea":
+              imageLocation = "./static/images/Crimea.png";
+              break;
+            case "Saxony":
+              imageLocation = "./static/images/Saxony.png";
+              break;
+            case "Polania":
+              imageLocation = "./static/images/Polania.png";
+              break;
+          }
           return (
             <div
               css={{
@@ -132,7 +156,7 @@ const BidArea = (props: {
               }}
             >
               <img
-                src={require(`./static/images/${faction}.png`)}
+                src={require(`${imageLocation}`)}
                 alt={faction}
                 css={{ width: 36, height: 36 }}
               />

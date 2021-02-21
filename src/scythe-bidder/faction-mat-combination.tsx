@@ -57,12 +57,35 @@ class FactionMatCombination extends React.Component<Props> {
   }
 
   getFactionIcon() {
+    const faction = this.props.combination.faction;
+    let imageLocation = "";
+
+    switch (faction) {
+      case "Albion":
+        imageLocation = "./static/images/Albion.webp";
+        break;
+      case "Togawa":
+        imageLocation = "./static/images/Togawa.webp";
+        break;
+      case "Nordic":
+        imageLocation = "./static/images/Nordic.png";
+        break;
+      case "Rusviet":
+        imageLocation = "./static/images/Rusviet.png";
+        break;
+      case "Crimea":
+        imageLocation = "./static/images/Crimea.png";
+        break;
+      case "Saxony":
+        imageLocation = "./static/images/Saxony.png";
+        break;
+      case "Polania":
+        imageLocation = "./static/images/Polania.png";
+        break;
+    }
+
     return (
-      <Image
-        src={require(`./static/images/${this.props.combination.faction}.png`)}
-        height={"50px"}
-        roundedCircle
-      />
+      <Image src={require(`${imageLocation}`)} height={"50px"} roundedCircle />
     );
   }
 
