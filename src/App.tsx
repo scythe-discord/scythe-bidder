@@ -3,6 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { jsx } from "@emotion/core";
+import { ThemeProvider } from "@emotion/react";
 import LobbyView from "./scythe-bidder/lobby";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
@@ -110,93 +111,104 @@ const App = () => {
     />
   );
 
+  const emotionTest = {
+    dark: {
+      yellow: "#eee999",
+    },
+    light: {
+      yellow: "#eee111",
+    },
+  };
+
   return (
-    <Layout>
-      <Layout.Header
-        css={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "0 24px",
-        }}
-      >
-        <div
+    <ThemeProvider theme={emotionTest}>
+      <Layout>
+        <Layout.Header
           css={{
-            color: "white",
-            fontWeight: 700,
-            fontFamily: "Lato, sans-serif",
-            fontSize: 20,
-            [mq[0]]: {
-              fontSize: 24,
-            },
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 24px",
           }}
         >
-          Scythe Bidder
-        </div>
-        <div>
-          <a
-            href="https://github.com/rezende/scythe-bidder"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div
+            css={{
+              color: "white",
+              fontWeight: 700,
+              fontFamily: "Lato, sans-serif",
+              fontSize: 20,
+              [mq[0]]: {
+                fontSize: 24,
+              },
+            }}
           >
-            Contribute on GitHub
-          </a>
-          {themeIcon}
-        </div>
-      </Layout.Header>
-      <Layout.Content
-        css={{
-          margin: "24px auto 96px",
-          padding: "0 24px",
-          maxWidth: 1200,
-          width: "100%",
-        }}
-      >
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" exact>
-              <LobbyView />
-            </Route>
-            <Route path="/game/:matchId">
-              <BidRoom isNotificationEnabled={isNotificationEnabled} />
-            </Route>
-          </Switch>
-        </BrowserRouter>
-        {!!window.Notification &&
-          ReactDOM.createPortal(
-            <Tooltip
-              title={
-                Notification.permission === "denied"
-                  ? "Scythe Bidder is not authorized to send notifications"
-                  : isNotificationEnabled
-                  ? "Stop sending me notifications"
-                  : "Notify me when it's my turn"
-              }
-              placement="topLeft"
+            Scythe Bidder
+          </div>
+          <div>
+            <a
+              href="https://github.com/rezende/scythe-bidder"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <div css={{ position: "fixed", bottom: 40, right: 40 }}>
-                <Button
-                  css={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    // workaround from https://github.com/ant-design/ant-design/issues/9581#issuecomment-599668648
-                    pointerEvents:
-                      Notification.permission === "denied" ? "none" : "auto",
-                  }}
-                  onClick={onToggleNotification}
-                  shape="circle"
-                  icon={
-                    isNotificationEnabled ? <BellFilled /> : <BellOutlined />
-                  }
-                  disabled={Notification.permission === "denied"}
-                />
-              </div>
-            </Tooltip>,
-            document.body
-          )}
-      </Layout.Content>
-    </Layout>
+              Contribute on GitHub
+            </a>
+            {themeIcon}
+          </div>
+        </Layout.Header>
+        <Layout.Content
+          css={{
+            margin: "24px auto 96px",
+            padding: "0 24px",
+            maxWidth: 1200,
+            width: "100%",
+          }}
+        >
+          <BrowserRouter>
+            <Switch>
+              <Route path="/" exact>
+                <LobbyView />
+              </Route>
+              <Route path="/game/:matchId">
+                <BidRoom isNotificationEnabled={isNotificationEnabled} />
+              </Route>
+            </Switch>
+          </BrowserRouter>
+          {!!window.Notification &&
+            ReactDOM.createPortal(
+              <Tooltip
+                title={
+                  Notification.permission === "denied"
+                    ? "Scythe Bidder is not authorized to send notifications"
+                    : isNotificationEnabled
+                    ? "Stop sending me notifications"
+                    : "Notify me when it's my turn"
+                }
+                placement="topLeft"
+              >
+                <div css={{ position: "fixed", bottom: 40, right: 40 }}>
+                  <Button
+                    css={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      // workaround from https://github.com/ant-design/ant-design/issues/9581#issuecomment-599668648
+                      pointerEvents:
+                        Notification.permission === "denied" ? "none" : "auto",
+                    }}
+                    onClick={onToggleNotification}
+                    shape="circle"
+                    icon={
+                      isNotificationEnabled ? <BellFilled /> : <BellOutlined />
+                    }
+                    disabled={Notification.permission === "denied"}
+                  />
+                </div>
+              </Tooltip>,
+              document.body
+            )}
+        </Layout.Content>
+      </Layout>
+    </ThemeProvider>
   );
 };
 
