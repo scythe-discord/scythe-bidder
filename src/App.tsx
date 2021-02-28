@@ -91,12 +91,28 @@ const App = () => {
     return null;
   }
   // Icon to display based on theme setting
+
+  const emotionTheme = {
+    dark: {
+      blueAccent: "#15395b",
+      iconColor: "#d8bd14",
+      listHeader: "#262626",
+      listBody: "#141414",
+    },
+    light: {
+      blueAccent: "#bae7ff",
+      iconColor: "#1890ff",
+      listHeader: "#fafafa",
+      listBody: "#ffffff",
+    },
+  };
+
   const themeIcon = isDarkTheme ? (
     <Brightness5
       style={{
         textDecoration: "inherit",
         marginLeft: 20,
-        color: "var(--icon-color)",
+        color: emotionTheme.dark.iconColor,
       }}
       onClick={handleTheme}
     />
@@ -105,23 +121,14 @@ const App = () => {
       style={{
         textDecoration: "inherit",
         marginLeft: 20,
-        color: "var(--icon-color)",
+        color: emotionTheme.light.iconColor,
       }}
       onClick={handleTheme}
     />
   );
 
-  const emotionTest = {
-    dark: {
-      yellow: "#eee999",
-    },
-    light: {
-      yellow: "#eee111",
-    },
-  };
-
   return (
-    <ThemeProvider theme={emotionTest}>
+    <ThemeProvider theme={emotionTheme}>
       <Layout>
         <Layout.Header
           css={{
