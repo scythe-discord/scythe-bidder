@@ -18,7 +18,6 @@ import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
 import { NOTIFICATION_ENABLED, DARK_THEME } from "./scythe-bidder/constants";
 import { useThemeSwitcher } from "react-css-theme-switcher";
-import { SportsRugbySharp } from "@material-ui/icons";
 
 config();
 
