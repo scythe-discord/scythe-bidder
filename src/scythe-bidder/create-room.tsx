@@ -86,24 +86,28 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       setupData = {
         factions: FACTIONS_BASE,
         mats: MATS_BASE,
+        setting: "Base",
       };
     }
     if (activeCombinations === GameSetting.IFA) {
       setupData = {
         factions: FACTIONS_IFA,
         mats: MATS_IFA,
+        setting: "IFA",
       };
     }
     if (activeCombinations === GameSetting.HI) {
       setupData = {
         factions: FACTIONS_HI,
         mats: MATS_HI,
+        setting: "Hi-Tier",
       };
     }
     if (activeCombinations === GameSetting.LO) {
       setupData = {
         factions: FACTIONS_LO,
         mats: MATS_LO,
+        setting: "Lo-Tier",
       };
     }
     // this if check should be unnecessary
@@ -181,7 +185,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   setNumPlayers(value);
                 }}
                 placeholder="# of players"
-                style={{ width: 50 }}
+                style={{ width: 55 }}
               >
                 {Array(maxPlayers + 1 - MIN_PLAYERS)
                   .fill(null)
