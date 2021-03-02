@@ -18,6 +18,7 @@ import { mq } from "./scythe-bidder/breakpoints";
 import Lockr from "lockr";
 import { NOTIFICATION_ENABLED, DARK_THEME } from "./scythe-bidder/constants";
 import { useThemeSwitcher } from "react-css-theme-switcher";
+import { SportsRugbySharp } from "@material-ui/icons";
 
 config();
 
@@ -27,12 +28,14 @@ const emotionTheme: Record<"light" | "dark", Theme> = {
     iconColor: "#d8bd14",
     listHeader: "#262626",
     listBody: "#141414",
+    disabled: "rgba(255, 255, 255, 0.3)",
   },
   light: {
     blueAccent: "#bae7ff",
     iconColor: "#1890ff",
     listHeader: "#fafafa",
     listBody: "#ffffff",
+    disabled: "rgba(0, 0, 0, 0.25)",
   },
 };
 

@@ -6,5 +6,6 @@ declare module "@emotion/react" {
     iconColor: string;
     listHeader: string;
     listBody: string;
+    disabled: string;
   }
 }
