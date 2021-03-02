@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { jsx } from "@emotion/core";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider, Theme } from "@emotion/react";
 import LobbyView from "./scythe-bidder/lobby";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./layout.css";
@@ -20,6 +20,21 @@ import { NOTIFICATION_ENABLED, DARK_THEME } from "./scythe-bidder/constants";
 import { useThemeSwitcher } from "react-css-theme-switcher";
 
 config();
+
+const emotionTheme: Record<"light" | "dark", Theme> = {
+  dark: {
+    blueAccent: "#15395b",
+    iconColor: "#d8bd14",
+    listHeader: "#262626",
+    listBody: "#141414",
+  },
+  light: {
+    blueAccent: "#bae7ff",
+    iconColor: "#1890ff",
+    listHeader: "#fafafa",
+    listBody: "#ffffff",
+  },
+};
 
 const App = () => {
   const setting =
@@ -92,21 +107,6 @@ const App = () => {
   }
   // Icon to display based on theme setting
 
-  const emotionTheme = {
-    dark: {
-      blueAccent: "#15395b",
-      iconColor: "#d8bd14",
-      listHeader: "#262626",
-      listBody: "#141414",
-    },
-    light: {
-      blueAccent: "#bae7ff",
-      iconColor: "#1890ff",
-      listHeader: "#fafafa",
-      listBody: "#ffffff",
-    },
-  };
-
   const themeIcon = isDarkTheme ? (
     <Brightness5
       style={{
@@ -128,7 +128,7 @@ const App = () => {
   );
 
   return (
-    <ThemeProvider theme={emotionTheme}>
+    <ThemeProvider theme={isDarkTheme ? emotionTheme.dark : emotionTheme.light}>
       <Layout>
         <Layout.Header
           css={{

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
+import { useTheme } from "@emotion/react";
 import { List } from "antd";
 import { Ctx } from "boardgame.io";
 import { Player } from "./types";
@@ -57,6 +58,8 @@ const TurnOrder = (props: Props) => {
     }
   }, [props.isNotificationEnabled, isGameOver]);
 
+  const theme = useTheme();
+
   return (
     <List
       header={
@@ -79,14 +82,16 @@ const TurnOrder = (props: Props) => {
               !isGameOver && props.ctx.currentPlayer === playerId ? 500 : 400,
             background:
               !isGameOver && props.ctx.currentPlayer === playerId
-                ? "var(--accent-blue)"
-                : "var(--background-list-body)",
+                ? theme.blueAccent
+                : theme.listBody,
           }}
         >
           {idx + 1}. {props.players[parseInt(playerId)].name}
         </List.Item>
       )}
-      css={{ background: "var(--background-list-header)" }}
+      css={{
+        background: theme.listHeader,
+      }}
     ></List>
   );
 };
