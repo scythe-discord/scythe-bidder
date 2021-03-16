@@ -66,10 +66,14 @@ const BiddingBoard = (props: {
 
   const onLeave = React.useCallback(async () => {
     if (matchInfo && playerID && credentials) {
-      await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
-        playerID,
-        credentials,
-      });
+      try {
+        await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
+          playerID,
+          credentials,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
     Lockr.rm(CURRENT_MATCH_INFO);
     history.push("/");
@@ -80,10 +84,14 @@ const BiddingBoard = (props: {
       return;
     }
     if (matchInfo && playerID && credentials) {
-      await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
-        playerID,
-        credentials,
-      });
+      try {
+        await client.leaveMatch(SCYTHE_BIDDER, matchInfo.matchId, {
+          playerID,
+          credentials,
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
     cleanupAfterLogout();
     history.push("/");
