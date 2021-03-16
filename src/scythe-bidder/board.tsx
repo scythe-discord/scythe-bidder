@@ -195,13 +195,7 @@ const BiddingBoard = (props: {
                     "&:not(:first-child)": { marginTop: 12 },
                   }}
                 >
-                  {c.faction === "Albion" ? (
-                    <img
-                      src={require(`./static/images/${c.faction}.webp`)}
-                      css={{ width: 24, height: 24, marginRight: 8 }}
-                      alt={c.faction}
-                    />
-                  ) : c.faction === "Togawa" ? (
+                  {c.faction === "Albion" || "Togawa" ? (
                     <img
                       src={require(`./static/images/${c.faction}.webp`)}
                       css={{ width: 24, height: 24, marginRight: 8 }}
