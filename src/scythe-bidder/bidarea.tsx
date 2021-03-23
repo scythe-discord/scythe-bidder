@@ -83,14 +83,12 @@ const BidArea = (props: {
       dataSource={props.G.combinations}
       css={{
         overflow: "auto",
-        tbody: { background: "#fff" },
         ".ant-table": { overflow: "auto" },
       }}
       rowKey={(combo) => `${combo.faction}:${combo.mat}`}
       pagination={false}
     >
       <Table.Column
-        css={{ background: "#fff" }}
         width={120}
         render={(combo) => {
           return (
@@ -123,10 +121,10 @@ const BidArea = (props: {
       ></Table.Column>
       <Table.Column
         title="Faction"
-        css={{ background: "#fff" }}
         width={72}
         dataIndex="faction"
         render={(faction) => {
+          let imageLocation = `./static/images/${faction}.webp`;
           return (
             <div
               css={{
@@ -135,7 +133,7 @@ const BidArea = (props: {
               }}
             >
               <img
-                src={require(`./static/images/${faction}.png`)}
+                src={require(`${imageLocation}`)}
                 alt={faction}
                 css={{ width: 36, height: 36 }}
               />
@@ -147,7 +145,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Player mat"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="mat"
         render={(mat: Mat) => {
@@ -165,7 +162,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Current bid"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="currentBid"
         render={(currentBid) => {
@@ -178,7 +174,6 @@ const BidArea = (props: {
 
       <Table.Column
         title="Highest bidder"
-        css={{ background: "#fff" }}
         width={120}
         dataIndex="currentHolder"
         render={(currentHolder) => {
