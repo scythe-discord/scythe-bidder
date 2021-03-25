@@ -1,23 +1,28 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
+import { useTheme } from "@emotion/react";
 import { List } from "antd";
 import { GameState } from "./types";
 
 const GameLog = (props: { G: GameState }) => {
   const { G } = props;
+  const theme = useTheme();
   return (
     <List
       dataSource={G.gameLogger}
       renderItem={(msg, key) => (
         <List.Item
-          css={{ background: "white", padding: "12px 24px" }}
+          css={{
+            background: theme.listBody,
+            padding: "12px 24px",
+          }}
           key={key}
         >
           {msg}
         </List.Item>
       )}
-      css={{ background: "#fff", marginTop: 24 }}
+      css={{ marginTop: 24 }}
     ></List>
   );
 };

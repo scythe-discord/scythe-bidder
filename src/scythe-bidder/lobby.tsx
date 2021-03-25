@@ -24,6 +24,7 @@ import { mq } from "./breakpoints";
 import { Link } from "react-router-dom";
 import { PLAYER_NAME, CREDENTIALS, CURRENT_MATCH_INFO } from "./constants";
 import { cleanupAfterLogout } from "./utils";
+import { useTheme } from "@emotion/react";
 
 export default function Lobby() {
   const [matches, setMatches] = React.useState<Array<LobbyAPI.Match>>([]);
@@ -146,6 +147,8 @@ export default function Lobby() {
     (match) => match.matchID === currentMatchInfoRef.current?.matchId
   );
 
+  const theme = useTheme();
+
   return (
     <Row gutter={24}>
       <Col xs={24} xl={7}>
@@ -212,9 +215,7 @@ export default function Lobby() {
                 let content = null;
                 if (filteredPlayers.length === 0) {
                   content = (
-                    <em css={{ color: "rgba(0, 0, 0, 0.25)" }}>
-                      No players yet
-                    </em>
+                    <em css={{ color: theme.disabled }}>No players yet</em>
                   );
                 } else {
                   content = (

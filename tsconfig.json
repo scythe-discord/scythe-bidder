@@ -18,7 +18,7 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./src/"],
+  "include": ["./src/", "gulpfile.js"],
   "exclude": ["./server"],
   "files": ["src/types.d.ts"]
 }
