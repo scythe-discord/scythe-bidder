@@ -10,6 +10,19 @@ const themes = {
   light: `${process.env.PUBLIC_URL}/light-theme.css`,
 };
 
+// Injected the insertion-point after docssearch
+if (process.browser && !global.__INSERTION_POINT__) {
+  global.__INSERTION_POINT__ = true;
+  const styleNode = document.createComment("styles-insertion-point");
+  const docsearchStylesSheet = document.querySelector(
+    "#styles-insertion-point"
+  );
+
+  if (document.head && docsearchStylesSheet) {
+    document.head.insertBefore(styleNode, docsearchStylesSheet.nextSibling);
+  }
+}
+
 ReactDOM.render(
   <ThemeSwitcherProvider
     insertionPoint="styles-insertion-point"
