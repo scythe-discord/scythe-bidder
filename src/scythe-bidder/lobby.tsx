@@ -235,7 +235,6 @@ export default function Lobby() {
               }}
             />
             <Table.Column
-              width={120}
               title="# of players"
               dataIndex="players"
               render={(players: Array<Player>) => {
@@ -247,7 +246,6 @@ export default function Lobby() {
             />
             {/* <Table.Column width={60} title="IFA" render={() => null} /> */}
             <Table.Column
-              width={180}
               dataIndex="matchID"
               render={(matchId, match: LobbyAPI.Match) => {
                 const matchIsFull =
