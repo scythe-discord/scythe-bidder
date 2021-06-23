@@ -158,6 +158,7 @@ const App = () => {
               href="https://github.com/rezende/scythe-bidder"
               target="_blank"
               rel="noopener noreferrer"
+              className="github-link"
             >
               Contribute on GitHub
             </a>
