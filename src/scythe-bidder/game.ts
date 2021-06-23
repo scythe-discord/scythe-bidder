@@ -83,39 +83,44 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
 };
 
 const setup = (ctx: Ctx, setupData: any) => {
+  let combosValid = false;
   let gameCombinations: Array<CombinationWithBid> = [];
-  const remainingCombos: { [key: string]: Array<Mat> } = {};
-  for (const faction of setupData.factions) {
-    remainingCombos[faction] = [
-      ...setupData.mats.filter(
-        (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
-      ),
-    ];
-  }
-  for (let i = 0; i < ctx.numPlayers; i++) {
-    const remainingFactions = Object.keys(remainingCombos);
-    const pickedFaction =
-      remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
-    const remainingPlayerMats = remainingCombos[pickedFaction];
-    const pickedPlayerMat =
-      remainingPlayerMats[
-        Math.floor(Math.random() * remainingPlayerMats.length)
-      ];
+  while (combosValid === false) {
+    combosValid = true;
+    gameCombinations = [];
+    let rejectMatCount = 0;
 
-    remainingFactions.forEach(
-      (faction) =>
-        (remainingCombos[faction] = remainingCombos[faction].filter(
-          (mat) => mat !== pickedPlayerMat
-        ))
-    );
-    delete remainingCombos[pickedFaction];
+    const remainingFactions = setupData.factions.map((x: Faction) => x);
+    const remainingMats = setupData.mats.map((x: Mat) => x);
 
-    gameCombinations.push({
-      faction: pickedFaction as Faction,
-      mat: pickedPlayerMat as Mat,
-      currentBid: -1,
-      currentHolder: null,
-    });
+    for (let i = 0; i < ctx.numPlayers; i++) {
+      const idxF = Math.floor(Math.random() * remainingFactions.length);
+      const idxM = Math.floor(Math.random() * remainingMats.length);
+      const pickedFaction = remainingFactions.splice(idxF, 1)[0];
+      const pickedPlayerMat = remainingMats.splice(idxM, 1)[0];
+
+      gameCombinations.push({
+        faction: pickedFaction as Faction,
+        mat: pickedPlayerMat as Mat,
+        currentBid: -1,
+        currentHolder: null,
+      });
+    }
+    for (const gameCombo of gameCombinations) {
+      if (gameCombo.mat === "Industrial" || gameCombo.mat === "Patriotic") {
+        rejectMatCount = rejectMatCount + 1;
+      }
+      if (checkBannedCombos(gameCombo.faction, gameCombo.mat) === true) {
+        combosValid = false;
+        break;
+      }
+    }
+    // reject set of valid combos to make combo generation probability equal
+    if (combosValid === true) {
+      if (Math.random() < 0.1425 * rejectMatCount) {
+        combosValid = false;
+      }
+    }
   }
 
   return {
