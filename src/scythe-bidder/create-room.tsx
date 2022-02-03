@@ -2,36 +2,19 @@
 
 import React from "react";
 import { jsx } from "@emotion/core";
-import { Button, Card, Form, notification, Select, Modal } from "antd";
+import { Button, Card, Form, notification, Select, Modal, Tooltip } from "antd";
 import client from "./client";
-import {
-  FACTIONS_BASE,
-  FACTIONS_IFA,
-  FACTIONS_HI,
-  FACTIONS_LO,
-  MATS_BASE,
-  MATS_IFA,
-  MATS_HI,
-  MATS_LO,
-} from "./constants";
-import { MAX_PLAYERS_BASE, MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
+import { DEFAULT_COMBOS } from "./constants";
+import { MAX_PLAYERS_IFA, MIN_PLAYERS } from "./constants";
 import { SCYTHE_BIDDER } from "./constants";
 import { QuestionCircleFilled } from "@ant-design/icons";
 
-enum GameSetting {
-  BASE,
-  IFA,
-  HI,
-  LO,
-}
+import CombinationSelector from "./combination-selector";
+import { Faction, Mat } from "./types";
 
 export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
   const [numPlayers, setNumPlayers] = React.useState(2);
-  const [activeCombinations, setActiveCombinations] = React.useState(
-    GameSetting.IFA
-  );
-  const maxPlayers =
-    activeCombinations === GameSetting.IFA ? MAX_PLAYERS_IFA : MAX_PLAYERS_BASE;
+  const [combosMap, setCombosMap] = React.useState(DEFAULT_COMBOS);
 
   const { Option } = Select;
 
@@ -61,6 +44,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
           <p>
             Lo-tier setting removes Rusviet, Crimea, Innovative, and Militant.
           </p>
+
           <p>
             <i>
               Learn more about tiers{" "}
@@ -73,64 +57,51 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
               </a>
             </i>
           </p>
+
+          <p>Choose "Custom" to select and view exact configurations.</p>
         </div>
       ),
       onOk() {},
     });
   }
 
-  const onClick = React.useCallback(async () => {
-    const numPlayersNum = Number(numPlayers);
-    let setupData = null;
-    if (activeCombinations === GameSetting.BASE) {
-      setupData = {
-        factions: FACTIONS_BASE,
-        mats: MATS_BASE,
-        setting: "Base",
-      };
-    }
-    if (activeCombinations === GameSetting.IFA) {
-      setupData = {
-        factions: FACTIONS_IFA,
-        mats: MATS_IFA,
-        setting: "IFA",
-      };
-    }
-    if (activeCombinations === GameSetting.HI) {
-      setupData = {
-        factions: FACTIONS_HI,
-        mats: MATS_HI,
-        setting: "Hi-Tier",
-      };
-    }
-    if (activeCombinations === GameSetting.LO) {
-      setupData = {
-        factions: FACTIONS_LO,
-        mats: MATS_LO,
-        setting: "Lo-Tier",
-      };
-    }
-    // this if check should be unnecessary
-    if (
-      !numPlayersNum ||
-      numPlayersNum < MIN_PLAYERS ||
-      (activeCombinations !== GameSetting.IFA &&
-        numPlayersNum > MAX_PLAYERS_BASE) ||
-      (activeCombinations === GameSetting.IFA &&
-        numPlayersNum > MAX_PLAYERS_IFA)
-    ) {
-      return;
-    }
+  let factionsSet = new Set<Faction>();
+  let matsSet = new Set<Mat>();
+
+  Object.entries(combosMap).forEach(([f, matsObj]) => {
+    Object.entries(matsObj).forEach(([m, v]) => {
+      if (v) {
+        factionsSet.add(f as Faction);
+        matsSet.add(m as Mat);
+      }
+    });
+  });
+
+  const shouldDisableButton =
+    factionsSet.size < numPlayers || matsSet.size < numPlayers;
+
+  const onClick = async () => {
     try {
       await client.createMatch(SCYTHE_BIDDER, {
-        numPlayers: numPlayersNum,
-        setupData: setupData,
+        numPlayers,
+        setupData: { combosMap: combosMap },
       });
       onCreate();
     } catch (e) {
       notification.error({ message: String(e) });
     }
-  }, [numPlayers, activeCombinations, onCreate]);
+  };
+
+  const button = (
+    <Button
+      onClick={onClick}
+      type="primary"
+      htmlType="submit"
+      disabled={shouldDisableButton}
+    >
+      Create
+    </Button>
+  );
 
   return (
     <Card
@@ -138,7 +109,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       title={
         <div css={{ display: "flex", justifyContent: "space-between" }}>
           <div>Create a room</div>
-          {/* <Switch css={{ marginLeft: 12 }} /> */}
         </div>
       }
     >
@@ -153,28 +123,7 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
           >
             {/* margin is required for tighter spacing */}
             <Form.Item label={gameSettingLabel} css={{ marginBottom: 0 }}>
-              <Select
-                defaultValue={1}
-                style={{ width: 90 }}
-                onChange={(value) => {
-                  setActiveCombinations(value);
-                  if (value !== GameSetting.IFA) {
-                    if (numPlayers > MAX_PLAYERS_BASE) {
-                      setNumPlayers(MAX_PLAYERS_BASE);
-                      notification.warning({
-                        message: "Warning",
-                        description: `This setting allows only 
-                                    up to ${MAX_PLAYERS_BASE} players.`,
-                      });
-                    }
-                  }
-                }}
-              >
-                <Option value={GameSetting.BASE}>Base</Option>
-                <Option value={GameSetting.IFA}>IFA</Option>
-                <Option value={GameSetting.HI}>Hi-Tier</Option>
-                <Option value={GameSetting.LO}>Lo-Tier</Option>
-              </Select>
+              <CombinationSelector value={combosMap} onChange={setCombosMap} />
             </Form.Item>
 
             {/* margin is required for tighter spacing */}
@@ -187,12 +136,12 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                 placeholder="# of players"
                 style={{ width: 55 }}
               >
-                {Array(maxPlayers + 1 - MIN_PLAYERS)
+                {Array(MAX_PLAYERS_IFA + 1 - MIN_PLAYERS)
                   .fill(null)
                   .map((_, idx) => (
-                    <Select.Option value={MIN_PLAYERS + idx} key={idx}>
+                    <Option value={MIN_PLAYERS + idx} key={idx}>
                       {MIN_PLAYERS + idx}
-                    </Select.Option>
+                    </Option>
                   ))}
               </Select>
             </Form.Item>
@@ -203,9 +152,13 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
               wrapperCol={{ offset: -4, span: 4 }}
               css={{ marginBottom: 0 }}
             >
-              <Button onClick={onClick} type="primary" htmlType="submit">
-                Create
-              </Button>
+              {shouldDisableButton ? (
+                <Tooltip title="Invalid configuration - too few factions/mats selected for the number of players.">
+                  {button}
+                </Tooltip>
+              ) : (
+                button
+              )}
             </Form.Item>
           </Form>
         </div>

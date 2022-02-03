@@ -10,8 +10,11 @@ import { bid } from "./moves";
 import {
   CombinationWithBid,
   Faction,
+  FactionMatCombinations,
   GameState,
   GameWithMinMaxPlayers,
+  getFaction,
+  getMat,
   Mat,
 } from "./types";
 
@@ -27,10 +30,6 @@ const endIf = (G: GameState) => {
   }
   if (endGame === true) return G.combinations;
 };
-
-const checkBannedCombos = (faction: Faction, mat: Mat) =>
-  (faction === "Rusviet" && mat === "Industrial") ||
-  (faction === "Crimea" && mat === "Patriotic");
 
 /*
   orderCombos() takes in an array of faction/player mat combinations
@@ -82,44 +81,99 @@ const orderCombos = (combinations: Array<CombinationWithBid>) => {
   return orderedCombos;
 };
 
-const setup = (ctx: Ctx, setupData: any) => {
-  let gameCombinations: Array<CombinationWithBid> = [];
-  const remainingCombos: { [key: string]: Array<Mat> } = {};
-  for (const faction of setupData.factions) {
-    remainingCombos[faction] = [
-      ...setupData.mats.filter(
-        (mat: Mat) => !checkBannedCombos(faction as Faction, mat)
-      ),
-    ];
+class Combination {
+  faction: Faction;
+  mat: Mat;
+
+  constructor(faction: Faction, mat: Mat) {
+    this.faction = faction;
+    this.mat = mat;
   }
-  for (let i = 0; i < ctx.numPlayers; i++) {
-    const remainingFactions = Object.keys(remainingCombos);
-    const pickedFaction =
-      remainingFactions[Math.floor(Math.random() * remainingFactions.length)];
-    const remainingPlayerMats = remainingCombos[pickedFaction];
-    const pickedPlayerMat =
-      remainingPlayerMats[
-        Math.floor(Math.random() * remainingPlayerMats.length)
-      ];
 
-    remainingFactions.forEach(
-      (faction) =>
-        (remainingCombos[faction] = remainingCombos[faction].filter(
-          (mat) => mat !== pickedPlayerMat
-        ))
+  toString() {
+    return `${this.faction}:${this.mat}`;
+  }
+
+  static parse(comboString: string) {
+    const match = comboString.match(/(?<faction>\w+):(?<mat>\w+)/);
+
+    if (!match?.groups) {
+      throw new Error(`Invalid combo string ${comboString}`);
+    }
+
+    const { faction, mat } = match.groups;
+
+    const f = getFaction(faction);
+    const m = getMat(mat);
+
+    return new Combination(f, m);
+  }
+}
+
+const assignCombos = (
+  numPlayers: number,
+  combos: Array<Combination>,
+  assignments: Array<Combination>
+): Array<Combination> | null => {
+  if (assignments.length === numPlayers) {
+    return assignments;
+  }
+
+  if (combos.length === 0) {
+    return null;
+  }
+
+  for (let combo of combos) {
+    assignments.push(combo);
+    const validCombos = combos.filter(
+      (c) => c.faction !== combo.faction && c.mat !== combo.mat
     );
-    delete remainingCombos[pickedFaction];
 
-    gameCombinations.push({
-      faction: pickedFaction as Faction,
-      mat: pickedPlayerMat as Mat,
-      currentBid: -1,
-      currentHolder: null,
+    const foundAssignments: Array<Combination> | null = assignCombos(
+      numPlayers,
+      validCombos,
+      assignments
+    );
+
+    if (foundAssignments) {
+      return foundAssignments;
+    }
+    assignments.pop();
+  }
+
+  return null;
+};
+
+const setup = (
+  ctx: Ctx,
+  { combosMap }: { combosMap: FactionMatCombinations }
+) => {
+  const combinations: Array<Combination> = [];
+  Object.entries(combosMap).forEach(([f, matsObj]) => {
+    Object.entries(matsObj).forEach(([m, v]) => {
+      if (v) {
+        combinations.push(new Combination(f as Faction, m as Mat));
+      }
     });
+  });
+
+  const shuffledCombos = ctx.random!.Shuffle(combinations);
+
+  const assignments = assignCombos(ctx.numPlayers, shuffledCombos, []);
+
+  if (!assignments) {
+    throw new Error("No valid assignments found");
   }
 
   return {
-    combinations: orderCombos(gameCombinations),
+    combinations: orderCombos(
+      assignments.map(({ faction, mat }) => ({
+        faction,
+        mat,
+        currentBid: 0,
+        currentHolder: null,
+      }))
+    ),
     players: {},
     endGame: false,
     gameLogger: ["Auction start!"],
