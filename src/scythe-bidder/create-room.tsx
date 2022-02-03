@@ -88,7 +88,10 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
       });
       onCreate();
     } catch (e) {
-      notification.error({ message: String(e) });
+      notification.error({
+        message:
+          "An error occurred. If this was a custom configuration, try adding more faction/mat combinations or reducing the player count.",
+      });
     }
   };
 
@@ -118,8 +121,8 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
             name="create-room"
             colon={false}
             labelAlign="left"
-            labelCol={{ span: 16 }}
-            wrapperCol={{ offset: 4, span: 4 }}
+            labelCol={{ span: 12 }}
+            css={{ width: "100%" }}
           >
             {/* margin is required for tighter spacing */}
             <Form.Item label={gameSettingLabel} css={{ marginBottom: 0 }}>
@@ -134,7 +137,6 @@ export default function CreateRoom({ onCreate }: { onCreate: () => void }) {
                   setNumPlayers(value);
                 }}
                 placeholder="# of players"
-                style={{ width: 55 }}
               >
                 {Array(MAX_PLAYERS_IFA + 1 - MIN_PLAYERS)
                   .fill(null)

@@ -44,7 +44,7 @@ function CombinationSelector({
   onPresetSelect: (value: FactionMatCombinations) => void;
 }) {
   return (
-    <div css={{ display: "flex", gap: 12 }}>
+    <div css={{ display: "flex", gap: 12, overflowX: "auto" }}>
       <div css={{ flex: "0 0 540px" }}>
         <Table
           dataSource={getData(value)}
@@ -252,7 +252,6 @@ export default function CombinationSelectorFormItem({
             setVisible(true);
           }
         }}
-        css={{ width: "100px !important" }}
       >
         {PRESETS.filter(({ hide }) => !hide).map((preset) => (
           <Select.Option key={preset.label} value={preset.label}>
