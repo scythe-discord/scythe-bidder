@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
 import {
+  DEFAULT_COMBOS,
   FACTIONS_IFA as FACTIONS,
   MATS_IFA as MATS,
   MAX_PLAYERS,
@@ -144,10 +145,9 @@ const assignCombos = (
   return null;
 };
 
-const setup = (
-  ctx: Ctx,
-  { combosMap }: { combosMap: FactionMatCombinations }
-) => {
+const setup = (ctx: Ctx, setupData?: { combosMap: FactionMatCombinations }) => {
+  const combosMap = setupData?.combosMap ?? DEFAULT_COMBOS;
+
   const combinations: Array<Combination> = [];
   Object.entries(combosMap).forEach(([f, matsObj]) => {
     Object.entries(matsObj).forEach(([m, v]) => {
