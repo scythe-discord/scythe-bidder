@@ -7,6 +7,7 @@ import { Button, Image } from "react-bootstrap";
 import { CombinationWithBid, Faction, Mat, Player } from "./types";
 import { Ctx } from "boardgame.io";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/events/events";
+import { getFactionIcon } from "./utils";
 
 interface Props {
   combination: CombinationWithBid;
@@ -56,39 +57,6 @@ class FactionMatCombination extends React.Component<Props> {
     this.props.events.endTurn();
   }
 
-  getFactionIcon() {
-    const faction = this.props.combination.faction;
-    let imageLocation = "";
-
-    switch (faction) {
-      case "Albion":
-        imageLocation = "./static/images/Albion.webp";
-        break;
-      case "Togawa":
-        imageLocation = "./static/images/Togawa.webp";
-        break;
-      case "Nordic":
-        imageLocation = "./static/images/Nordic.png";
-        break;
-      case "Rusviet":
-        imageLocation = "./static/images/Rusviet.png";
-        break;
-      case "Crimea":
-        imageLocation = "./static/images/Crimea.png";
-        break;
-      case "Saxony":
-        imageLocation = "./static/images/Saxony.png";
-        break;
-      case "Polania":
-        imageLocation = "./static/images/Polania.png";
-        break;
-    }
-
-    return (
-      <Image src={require(`${imageLocation}`)} height={"50px"} roundedCircle />
-    );
-  }
-
   getMatLink() {
     return (
       <Button
@@ -127,7 +95,12 @@ class FactionMatCombination extends React.Component<Props> {
           </Button>
         </td>
         <td className="align-middle text-center">
-          {this.getFactionIcon()} {this.getMatLink()}{" "}
+          <Image
+            src={require(getFactionIcon(this.props.combination.faction))}
+            height={"50px"}
+            roundedCircle
+          />{" "}
+          {this.getMatLink()}{" "}
         </td>
         <td className="align-middle text-center">
           {this.props.combination.currentBid > -1 &&
