@@ -170,7 +170,7 @@ const setup = (
       assignments.map(({ faction, mat }) => ({
         faction,
         mat,
-        currentBid: 0,
+        currentBid: -1,
         currentHolder: null,
       }))
     ),
